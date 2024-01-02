@@ -62,9 +62,7 @@ impl Parser {
         let mut tokenstream = Tokenstream::from(&input);
 
         while let Some(token) = tokenstream.peek() {
-            tokenstream.next();
-
-            let expr = self.parse_expr(&mut tokenstream, token);
+            let expr = self.parse_expr(&mut tokenstream, 0);
             expressions.push(expr);
         }
 
@@ -72,34 +70,37 @@ impl Parser {
     }
 
     /// Parses an expression.
-    fn parse_expr(&self, tokenstream: &mut Tokenstream, token: Token) -> Expression {
+    fn parse_expr(&self, tokenstream: &mut Tokenstream, _precedence: u8) -> Expression {
+        let token = tokenstream.next_unwrap();
+
         let prefix_parselet = match self.prefix_parselets.get(&token.class) {
             Some (p) => p,
             None => Error::CouldNotParse (&token.value).throw(),
         };
 
-        let mut expression = prefix_parselet.parse(
+        let expression = prefix_parselet.parse(
             tokenstream,
             self,
             token,
         );
 
-        while let Some(token) = tokenstream.peek() {
-            tokenstream.next();
+        let token = match tokenstream.peek() {
+            Some (t) => t,
+            None => return expression,
+        };
 
-            let infix_parselet = match self.infix_parselets.get(&token.class) {
-                Some (p) => p,
-                None => Error::CouldNotParse (&token.value).throw(),
-            };
+        let infix_parselet = match self.infix_parselets.get(&token.class) {
+            Some (p) => p,
+            None => return expression,
+        };
 
-            expression = infix_parselet.parse(
-                tokenstream,
-                self,
-                expression,
-                token,
-            );
-        }
+        tokenstream.next();
 
-        expression
+        infix_parselet.parse(
+            tokenstream,
+            self,
+            expression,
+            token,
+        )
     }
 }

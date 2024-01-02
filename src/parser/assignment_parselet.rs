@@ -19,7 +19,7 @@ impl InfixParselet for AssignmentParselet {
         match left {
             Identifier (id) => Assignment {
                 left: id.to_owned(),
-                right: Box::new(parser.parse_expr(tokenstream, token)),
+                right: Box::new(parser.parse_expr(tokenstream, 0)),
             },
             _ => todo!(),
         }

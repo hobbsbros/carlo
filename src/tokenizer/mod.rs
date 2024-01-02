@@ -2,6 +2,8 @@
 
 mod token;
 
+use crate::Error;
+
 pub use token::{
     Token,
     TokenClass,
@@ -125,6 +127,22 @@ impl Tokenstream {
         self.index += 1;
 
         t
+    }
+
+    /// Gets the next token and unwraps it, throwing an
+    /// unexpected EOF error if no token is available.
+    pub fn next_unwrap(&mut self) -> Token {
+        let last = match self.tokens.iter().last() {
+            Some (t) => t.value.clone(),
+            None => String::from("EOF"),
+        };
+
+        let next = self.next();
+
+        match next {
+            Some (t) => t,
+            None => Error::UnexpectedEOF (&last).throw(),
+        }
     }
 }
 

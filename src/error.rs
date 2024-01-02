@@ -23,6 +23,9 @@ pub enum Error<'a> {
 
     /// Could not parse expression
     CouldNotParse (&'a str),
+
+    /// Unexpected EOF
+    UnexpectedEOF (&'a str),
 }
 
 /// Converts an error into a string.
@@ -37,6 +40,7 @@ impl<'a> fmt::Display for Error<'a> {
             NoInputFile => format!("No input file provided"),
             CouldNotParseNumber (s) => format!("Could not parse number: {}", s),
             CouldNotParse (s) => format!("Could not parse near token: {}", s),
+            UnexpectedEOF (s) => format!("Unexpected EOF near token: {}", s),
         };
 
         write!(f, "{}", string)
