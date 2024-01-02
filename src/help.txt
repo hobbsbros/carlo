@@ -1,1 +1,10 @@
-Help menu coming soon!
+USAGE
+    carlo [subcommand]
+    carlo [subcommand] [input file]
+
+SUBCOMMANDS
+    help        display this help menu
+    run         executes an input file
+    version     displays the current version of Carlo
+
+Executing `carlo` without a subcommand will display this help menu.

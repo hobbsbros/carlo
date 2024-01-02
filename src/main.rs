@@ -1,9 +1,14 @@
 //! Main executable for the Carlo language.
 
-use std::path::PathBuf;
+use std::{
+    fs::OpenOptions,
+    io::Read,
+    path::PathBuf,
+};
 
 use carlotk::{
     CliArgs,
+    Error,
     Subcommand,
 };
 
@@ -30,10 +35,30 @@ fn help() {
 }
 
 fn run(inputfile: Option<PathBuf>) {
-    match inputfile {
-        Some (i) => println!("Executing {}", i.display()),
-        None => println!("No input file provided"),
-    }
+    let f = match inputfile {
+        Some (i) => i,
+        None => Error::NoInputFile.throw(),
+    };
+
+    let strf = format!("{}", f.display());
+
+    let option_file = OpenOptions::new()
+        .read(true)
+        .open(f);
+
+    let mut file = match option_file {
+        Ok (f) => f,
+        _ => Error::CouldNotFindFile (&strf).throw(),
+    };
+
+    let mut contents = String::new();
+    
+    match file.read_to_string(&mut contents) {
+        Ok (_) => (),
+        _ => Error::CouldNotReadFile (&strf).throw(),
+    };
+
+    println!("{}", contents);
 }
 
 fn version() {
