@@ -22,7 +22,7 @@ impl Token {
     }
 }
 
-#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+#[derive(Clone, Copy, PartialEq, Eq, Debug, Hash)]
 /// Enumerates the classes of Carlo langauge tokens.
 pub enum TokenClass {
     /// Identifier

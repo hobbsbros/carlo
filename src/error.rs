@@ -17,6 +17,12 @@ pub enum Error<'a> {
 
     /// No input file
     NoInputFile,
+
+    /// Could not parse number
+    CouldNotParseNumber (&'a str),
+
+    /// Could not parse expression
+    CouldNotParse (&'a str),
 }
 
 /// Converts an error into a string.
@@ -28,7 +34,9 @@ impl<'a> fmt::Display for Error<'a> {
             UnrecognizedSubcommand (s) => format!("Did not recognize subcommand: {}", s),
             CouldNotFindFile (s) => format!("Could not locate file: {}", s),
             CouldNotReadFile (s) => format!("Could not read file: {}", s),
-            NoInputFile => format!("No input file provided")
+            NoInputFile => format!("No input file provided"),
+            CouldNotParseNumber (s) => format!("Could not parse number: {}", s),
+            CouldNotParse (s) => format!("Could not parse near token: {}", s),
         };
 
         write!(f, "{}", string)

@@ -2,6 +2,7 @@
 
 mod cli;
 mod error;
+mod parser;
 mod tokenizer;
 
 pub use cli::{
@@ -15,4 +16,9 @@ pub use tokenizer::{
     Token,
     TokenClass,
     Tokenstream,
+};
+
+pub use parser::{
+    Expression,
+    Parser,
 };

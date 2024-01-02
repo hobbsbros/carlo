@@ -9,6 +9,7 @@ use std::{
 use carlotk::{
     CliArgs,
     Error,
+    Parser,
     Subcommand,
 };
 
@@ -35,6 +36,7 @@ fn help() {
 }
 
 fn run(inputfile: Option<PathBuf>) {
+    // Read data from input file
     let f = match inputfile {
         Some (i) => i,
         None => Error::NoInputFile.throw(),
@@ -58,7 +60,10 @@ fn run(inputfile: Option<PathBuf>) {
         _ => Error::CouldNotReadFile (&strf).throw(),
     };
 
-    println!("{}", contents);
+    // Construct parser
+    let parser = Parser::new();
+
+    println!("{:#?}", parser.parse(contents));
 }
 
 fn version() {

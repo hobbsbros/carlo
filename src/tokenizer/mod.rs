@@ -43,7 +43,7 @@ impl Charstream {
         while let Some (c) = self.peek() {
             self.next();
 
-            if c == ' ' {
+            if " \n".contains(c) {
                 break;
             }
 
