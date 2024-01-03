@@ -1,0 +1,8 @@
+SUBCOMMAND: version
+
+Prints the version number of the Carlo language.
+
+USAGE
+    carlo version
+
+Executing `carlo` without a subcommand will display the help menu.

@@ -1,0 +1,9 @@
+SUBCOMMAND: help
+
+Provides help to the user.
+
+USAGE
+    carlo help
+    carlo help [subcommand]    
+
+Executing `carlo` without a subcommand will display the help menu.

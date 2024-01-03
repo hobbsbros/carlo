@@ -7,6 +7,7 @@ use std::{
 
 use crate::Error;
 
+#[derive(Clone, Copy, PartialEq, Eq)]
 /// Subcommands for the Carlo language executable.
 pub enum Subcommand {
     /// Executes a source file
@@ -58,6 +59,9 @@ pub struct CliArgs {
     /// Executable subcommand
     pub subcommand: Subcommand,
 
+    /// Argument to subcommand
+    pub argument: Option<String>,
+
     /// Input file
     pub inputfile: Option<PathBuf>,
 
@@ -76,6 +80,13 @@ impl CliArgs {
         } else {
             Subcommand::Help
         };
+
+        let mut argument = None;
+
+        // Parse argument
+        if subcommand == Subcommand::Help && args.len() > 2 {
+            argument = Some (args[2].to_owned());
+        }
 
         // Parse input file
         let inputfile = if args.len() > 2 {
@@ -108,6 +119,7 @@ impl CliArgs {
     
         Self {
             subcommand,
+            argument,
             inputfile,
             flags,
         }

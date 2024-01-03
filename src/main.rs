@@ -1,6 +1,7 @@
 //! Main executable for the Carlo language.
 
 use std::{
+    collections::HashMap,
     fs::OpenOptions,
     io::Read,
     path::PathBuf,
@@ -18,7 +19,12 @@ use carlotk::{
 
 const VERSION: &str = "0.1.0";
 
-const HELP: &str = include_str!("./help.txt");
+const HELP: [(&str, &str); 4] = [
+    ("", include_str!("./help.txt")),
+    ("run", include_str!("./help_run.txt")),
+    ("help", include_str!("./help_help.txt")),
+    ("version", include_str!("./help_version.txt")),
+];
 
 fn main() {
     use Flag::*;
@@ -26,7 +32,7 @@ fn main() {
     let args = CliArgs::parse();
 
     match args.subcommand {
-        Subcommand::Help => help(),
+        Subcommand::Help => help(&args.argument.unwrap_or(String::new())),
         Subcommand::Run => run(
             args.inputfile.clone(),
             args.contains(Debug),
@@ -35,12 +41,18 @@ fn main() {
     };
 }
 
-fn help() {
+fn help(argument: &str) {
+    let hashmap = HashMap::from(HELP);
+    let help = match hashmap.get(&argument) {
+        Some (h) => h,
+        None => Error::NoHelpAvailable (argument).throw(),
+    };
+
     println!("{}", "The Carlo Language".truecolor(20, 146, 255).bold());
     println!("Version {}", VERSION);
     println!("Developed by Hobbs Bros.");
     println!();
-    println!("{}", HELP);
+    println!("{}", help);
 }
 
 fn run(inputfile: Option<PathBuf>, debug: bool) {

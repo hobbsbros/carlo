@@ -1,10 +1,15 @@
 USAGE
     carlo [subcommand]
     carlo [subcommand] [input file]
+    carlo [subcommand] [input file] [flags]
+    carlo help [subcommand]
 
 SUBCOMMANDS
     help        display this help menu
     run         executes an input file
     version     displays the current version of Carlo
+
+HELP
+    Execute `carlo help [subcommand]` to get help on a specific subcommand.
 
 Executing `carlo` without a subcommand will display this help menu.

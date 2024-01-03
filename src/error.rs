@@ -39,6 +39,9 @@ pub enum Error<'a> {
 
     /// Expected
     Expected (TokenClass, TokenClass),
+
+    /// No help available
+    NoHelpAvailable (&'a str),
 }
 
 /// Converts an error into a string.
@@ -57,6 +60,7 @@ impl<'a> fmt::Display for Error<'a> {
             CouldNotParse (s) => format!("Could not parse near token: {}", s),
             UnexpectedEOF (s) => format!("Unexpected EOF near token: {}", s),
             Expected (x, a) => format!("Expected token of class: {} but instead found token of class: {}", x, a),
+            NoHelpAvailable (s) => format!("No help available for subcommand: {}", s),
         };
 
         write!(f, "{}", string)
