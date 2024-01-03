@@ -22,6 +22,11 @@ impl Token {
     pub fn check(&self, class: TokenClass) -> bool {
         self.class == class
     }
+
+    /// Gets the precedence of this token.
+    pub fn precedence(&self) -> u8 {
+        self.class.into()
+    }
 }
 
 impl fmt::Display for Token {
@@ -42,11 +47,41 @@ pub enum TokenClass {
     /// Assignment operator
     Assignment,
 
+    /// Addition
+    Plus,
+
+    /// Subtraction
+    Minus,
+
+    /// Multiplication
+    Times,
+
+    /// Division
+    Divide,
+
     /// Number
     Number,
 
     /// Unknown
     Unknown,
+}
+
+impl From<TokenClass> for u8 {
+    fn from(class: TokenClass) -> Self {
+        use TokenClass::*;
+
+        match class {
+            Let         => 1,
+            Identifier  => 0,
+            Assignment  => 1,
+            Number      => 0,
+            Unknown     => 0,
+            Plus        => 2,
+            Minus       => 2,
+            Times       => 3,
+            Divide      => 3,
+        }
+    }
 }
 
 impl fmt::Display for TokenClass {
@@ -59,6 +94,10 @@ impl fmt::Display for TokenClass {
             Assignment => "Assignment",
             Number => "Number",
             Unknown => "Unknown",
+            Plus => "Plus",
+            Minus => "Minus",
+            Times => "Times",
+            Divide => "Divide",
         };
 
         write!(f, "{}", string)

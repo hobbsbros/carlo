@@ -12,13 +12,8 @@ use super::{
 pub struct NumberParselet {}
 
 impl PrefixParselet for NumberParselet {
-    fn parse(&self, tokenstream: &mut Tokenstream, parser: &Parser, token: Token) -> Expression {
+    fn parse(&self, tokenstream: &mut Tokenstream, parser: &Parser, token: Token, _nesting: usize) -> Expression {
         use Expression::*;
-
-        if parser.debug {
-            println!();
-            println!("Parsing number near token {}", token);
-        }
 
         match str::parse::<i64>(&token.value) {
             Ok (i) => Integer (i),

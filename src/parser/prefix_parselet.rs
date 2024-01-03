@@ -9,5 +9,5 @@ use super::{
 };
 
 pub trait PrefixParselet {
-    fn parse(&self, tokenstream: &mut Tokenstream, parser: &Parser, token: Token) -> Expression;
+    fn parse(&self, tokenstream: &mut Tokenstream, parser: &Parser, token: Token, nesting: usize) -> Expression;
 }

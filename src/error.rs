@@ -65,7 +65,6 @@ impl<'a> fmt::Display for Error<'a> {
 
 impl<'a> Error<'a> {
     pub fn throw(&self) -> ! {
-        println!();
         println!("{} {}", "(error)".truecolor(255, 60, 40).bold(), self);
         exit(0);
     }

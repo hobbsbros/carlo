@@ -12,13 +12,8 @@ use super::{
 pub struct IdentifierParselet {}
 
 impl PrefixParselet for IdentifierParselet {
-    fn parse(&self, tokenstream: &mut Tokenstream, parser: &Parser, token: Token) -> Expression {
+    fn parse(&self, tokenstream: &mut Tokenstream, parser: &Parser, token: Token, _nesting: usize) -> Expression {
         use Expression::*;
-
-        if parser.debug {
-            println!();
-            println!("Parsing identifier near token {}", token);
-        }
 
         Expression::Identifier (token.value.to_owned())
     }

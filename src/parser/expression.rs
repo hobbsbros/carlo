@@ -1,5 +1,14 @@
 //! Defines Carlo language expressions.
 
+#[derive(Clone, Copy, Debug)]
+/// Defines binary operations in Carlo.
+pub enum BinaryOperation {
+    Add,
+    Sub,
+    Mul,
+    Div,
+}
+
 #[derive(Debug)]
 pub enum Expression {
     /// Assignment
@@ -22,4 +31,11 @@ pub enum Expression {
 
     /// Identifier
     Identifier (String),
+
+    /// Binary operation
+    BinOp {
+        left: Box<Expression>,
+        oper: BinaryOperation,
+        right: Box<Expression>,
+    }
 }

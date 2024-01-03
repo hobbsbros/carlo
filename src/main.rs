@@ -45,7 +45,7 @@ fn help() {
 
 fn run(inputfile: Option<PathBuf>, debug: bool) {
     if debug {
-        println!("{} running Carlo in debug mode", "(notice)".truecolor(255, 255, 0));
+        println!("{} running Carlo in debug mode", "(notice)".truecolor(220, 180, 0).bold());
         println!();
     }
 

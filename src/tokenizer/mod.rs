@@ -36,6 +36,10 @@ impl Charstream {
         let class = match peek {
             'A'..='Z' | 'a'..='z' | '_' => Identifier,
             '=' => Assignment,
+            '+' => Plus,
+            '-' => Minus,
+            '*' => Times,
+            '/' => Divide,
             '0'..='9' => Number,
             _ => Unknown,
         };
@@ -45,7 +49,7 @@ impl Charstream {
         while let Some (c) = self.peek() {
             self.next();
 
-            if " \n".contains(c) {
+            if [' ', '\n', ';'].contains(&c) {
                 break;
             }
 
@@ -58,6 +62,14 @@ impl Charstream {
             } else if ('0'..'9').contains(&c) && class == Identifier {
                 value.push(c);
             } else if c == '=' && class == Assignment {
+                value.push(c);
+            } else if c == '+' && class == Plus {
+                value.push(c);
+            } else if c == '-' && class == Minus {
+                value.push(c);
+            } else if c == '*' && class == Times {
+                value.push(c);
+            } else if c == '/' && class == Divide {
                 value.push(c);
             } else if ('0'..'9').contains(&c) && class == Number {
                 value.push(c);
@@ -143,13 +155,6 @@ impl Tokenstream {
         let t = self.peek();
         self.index += 1;
 
-        if self.debug {
-            match &t {
-                Some (token) => println!("Extracting token: {}", token),
-                None => println!("Extracting token: (EOF)"),
-            }
-        }
-
         t
     }
 
@@ -176,6 +181,14 @@ impl Tokenstream {
         match token.class {
             class => token,
             _ => Error::Expected (class, token.class).throw(),
+        }
+    }
+
+    /// Gets the precedence of the next token.
+    pub fn precedence(&self) -> u8 {
+        match self.peek() {
+            Some (t) => t.precedence(),
+            None => 0,
         }
     }
 }

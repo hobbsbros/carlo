@@ -13,19 +13,19 @@ use super::{
 pub struct ReassignmentParselet {}
 
 impl InfixParselet for ReassignmentParselet {
-    fn parse(&self, tokenstream: &mut Tokenstream, parser: &Parser, left: Expression, token: Token) -> Expression {
+    fn parse(&self, tokenstream: &mut Tokenstream, parser: &Parser, left: Expression, token: Token, nesting: usize) -> Expression {
         use Expression::*;
 
-        if parser.debug {
-            println!();
-            println!("Parsing reassignment near token {}", token);
-        }
+        let right = parser.parse_expr(tokenstream, token.precedence(), nesting + 1);
 
-        let id = &tokenstream.get(TokenClass::Identifier).value;
+        let left = match left {
+            Identifier (i) => i,
+            _ => unreachable!(),
+        };
 
         Reassignment {
-            left: id.to_owned(),
-            right: Box::new(parser.parse_expr(tokenstream, 0)),
+            left: left.to_owned(),
+            right: Box::new(right),
         }
     }
 }

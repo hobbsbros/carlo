@@ -13,13 +13,8 @@ use super::{
 pub struct AssignmentParselet {}
 
 impl PrefixParselet for AssignmentParselet {
-    fn parse(&self, tokenstream: &mut Tokenstream, parser: &Parser, token: Token) -> Expression {
+    fn parse(&self, tokenstream: &mut Tokenstream, parser: &Parser, token: Token, nesting: usize) -> Expression {
         use Expression::*;
-
-        if parser.debug {
-            println!();
-            println!("Parsing assignment near token {}", token);
-        }
 
         // Parse left
         let left = &tokenstream.get(TokenClass::Identifier).value;
@@ -28,7 +23,7 @@ impl PrefixParselet for AssignmentParselet {
         tokenstream.get(TokenClass::Assignment);
 
         // Parse right
-        let right = parser.parse_expr(tokenstream, 0);
+        let right = parser.parse_expr(tokenstream, token.precedence(), nesting + 1);
 
         Assignment {
             left: left.to_owned(),
