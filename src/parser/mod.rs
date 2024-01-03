@@ -75,7 +75,7 @@ impl Parser {
         let mut expressions = Vec::new();
         let mut tokenstream = Tokenstream::from(&input, self.debug);
 
-        while let Some(token) = tokenstream.peek() {
+        while let Some(_) = tokenstream.peek() {
             let expr = self.parse_expr(&mut tokenstream, 0, 0);
             expressions.push(expr);
         }
@@ -101,7 +101,7 @@ impl Parser {
 
         // Indent debug statements
         let mut indent = String::new();
-        for i in 0..nesting {
+        for _ in 0..nesting {
             indent.push_str("    ");
         }
 

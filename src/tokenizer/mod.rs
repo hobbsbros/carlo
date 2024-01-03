@@ -115,7 +115,6 @@ impl Charstream {
 pub struct Tokenstream {
     tokens: Vec<Token>,
     index: usize,
-    debug: bool,
 }
 
 impl Tokenstream {
@@ -137,7 +136,6 @@ impl Tokenstream {
         Self {
             tokens,
             index: 0,
-            debug,
         }
     }
 
@@ -178,9 +176,10 @@ impl Tokenstream {
     pub fn get(&mut self, class: TokenClass) -> Token {
         let token = self.next_unwrap();
 
-        match token.class {
-            class => token,
-            _ => Error::Expected (class, token.class).throw(),
+        if token.class == class {
+            token
+        } else {
+            Error::Expected (class, token.class).throw()
         }
     }
 

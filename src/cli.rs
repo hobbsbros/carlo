@@ -86,7 +86,7 @@ impl CliArgs {
 
         // Parse flags
         let mut flags = Vec::new();
-        let mut i = if let Some (i) = &inputfile {
+        let mut i = if let Some (_) = &inputfile {
             3
         } else {
             2

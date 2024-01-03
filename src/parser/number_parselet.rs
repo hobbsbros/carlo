@@ -12,7 +12,7 @@ use super::{
 pub struct NumberParselet {}
 
 impl PrefixParselet for NumberParselet {
-    fn parse(&self, tokenstream: &mut Tokenstream, parser: &Parser, token: Token, _nesting: usize) -> Expression {
+    fn parse(&self, _tokenstream: &mut Tokenstream, _parser: &Parser, token: Token, _nesting: usize) -> Expression {
         use Expression::*;
 
         match str::parse::<i64>(&token.value) {

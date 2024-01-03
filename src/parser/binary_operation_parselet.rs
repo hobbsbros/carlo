@@ -2,7 +2,6 @@
 
 use super::{
     BinaryOperation,
-    Error,
     Expression,
     Parser,
     InfixParselet,

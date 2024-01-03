@@ -1,7 +1,6 @@
 //! Defines an assignment parselet.
 
 use super::{
-    Error,
     Expression,
     Parser,
     PrefixParselet,

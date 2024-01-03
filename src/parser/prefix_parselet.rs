@@ -1,7 +1,6 @@
 //! Abstracts over prefix parselets.
 
 use super::{
-    Error,
     Expression,
     Parser,
     Token,

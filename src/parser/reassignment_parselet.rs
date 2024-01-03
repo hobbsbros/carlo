@@ -1,12 +1,10 @@
 //! Defines a reassignment parselet.
 
 use super::{
-    Error,
     Expression,
     Parser,
     InfixParselet,
     Token,
-    TokenClass,
     Tokenstream,
 };
 
