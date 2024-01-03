@@ -8,6 +8,12 @@ pub enum Expression {
         right: Box<Expression>,
     },
 
+    /// Reassignment
+    Reassignment {
+        left: String,
+        right: Box<Expression>,
+    },
+
     /// 64-bit integer
     Integer (i64),
 

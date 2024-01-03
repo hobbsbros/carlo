@@ -33,6 +33,26 @@ impl From<&str> for Subcommand {
     }
 }
 
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+/// Flags for the Carlo language executable.
+pub enum Flag {
+    /// Runs the Carlo language parser in debug mode
+    Debug,
+}
+
+/// Converts a string into a flag.
+impl From<&str> for Flag {
+    fn from(input: &str) -> Self {
+        use Flag::*;
+
+        match input {
+            "debug" => Debug,
+            "d" => Debug,
+            _ => Error::UnrecognizedFlag (input).throw(),
+        }
+    }
+}
+
 /// Command-line arguments for the Carlo language executable.
 pub struct CliArgs {
     /// Executable subcommand
@@ -40,6 +60,9 @@ pub struct CliArgs {
 
     /// Input file
     pub inputfile: Option<PathBuf>,
+
+    /// Flags
+    pub flags: Vec<Flag>,
 }
 
 impl CliArgs {
@@ -60,10 +83,44 @@ impl CliArgs {
         } else {
             None
         };
+
+        // Parse flags
+        let mut flags = Vec::new();
+        let mut i = if let Some (i) = &inputfile {
+            3
+        } else {
+            2
+        };
+        while i < args.len() {
+            let arg = &args[i];
+
+            let flag: Flag = if arg.starts_with("--") {
+                arg[2..].into()
+            } else if arg.starts_with("-") {
+                arg[1..].into()
+            } else {
+                Error::UnrecognizedArgument (arg).throw();
+            };
+            
+            flags.push(flag);
+            i += 1;
+        }
     
         Self {
             subcommand,
             inputfile,
+            flags,
         }
+    }
+
+    /// Check if a specific flag is contained in these arguments.
+    pub fn contains(&self, flag: Flag) -> bool {
+        for f in &self.flags {
+            if *f == flag {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

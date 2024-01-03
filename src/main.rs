@@ -6,9 +6,12 @@ use std::{
     path::PathBuf,
 };
 
+use colored::*;
+
 use carlotk::{
     CliArgs,
     Error,
+    Flag,
     Parser,
     Subcommand,
 };
@@ -18,24 +21,34 @@ const VERSION: &str = "0.1.0";
 const HELP: &str = include_str!("./help.txt");
 
 fn main() {
+    use Flag::*;
+
     let args = CliArgs::parse();
 
     match args.subcommand {
         Subcommand::Help => help(),
-        Subcommand::Run => run(args.inputfile),
+        Subcommand::Run => run(
+            args.inputfile.clone(),
+            args.contains(Debug),
+        ),
         Subcommand::Version => version(),
     };
 }
 
 fn help() {
-    println!("The Carlo Language");
+    println!("{}", "The Carlo Language".truecolor(20, 146, 255).bold());
     println!("Version {}", VERSION);
     println!("Developed by Hobbs Bros.");
     println!();
     println!("{}", HELP);
 }
 
-fn run(inputfile: Option<PathBuf>) {
+fn run(inputfile: Option<PathBuf>, debug: bool) {
+    if debug {
+        println!("{} running Carlo in debug mode", "(notice)".truecolor(255, 255, 0));
+        println!();
+    }
+
     // Read data from input file
     let f = match inputfile {
         Some (i) => i,
@@ -61,11 +74,12 @@ fn run(inputfile: Option<PathBuf>) {
     };
 
     // Construct parser
-    let parser = Parser::new();
+    let parser = Parser::new(debug);
 
     println!("{:#?}", parser.parse(contents));
 }
 
 fn version() {
-    println!("The Carlo Language, Version {}", VERSION);
+    println!("{}", "The Carlo Language".truecolor(20, 146, 255).bold());
+    println!("Version {}", VERSION);
 }

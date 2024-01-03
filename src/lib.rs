@@ -7,6 +7,7 @@ mod tokenizer;
 
 pub use cli::{
     CliArgs,
+    Flag,
     Subcommand,
 };
 

@@ -64,6 +64,16 @@ impl Charstream {
             }
         }
 
+        // Special cases
+
+        // `let` expression
+        if value.as_str() == "let" && class == Identifier {
+            return Some (Token {
+                class: Let,
+                value: "let".to_string(),
+            });
+        }
+
         Some (Token {
             class,
             value,
@@ -93,11 +103,12 @@ impl Charstream {
 pub struct Tokenstream {
     tokens: Vec<Token>,
     index: usize,
+    debug: bool,
 }
 
 impl Tokenstream {
     /// Constructs a new token stream from an input string.
-    pub fn from(input: &str) -> Self {
+    pub fn from(input: &str, debug: bool) -> Self {
         let mut tokens = Vec::new();
 
         let mut charstream = Charstream::from(input);
@@ -106,9 +117,15 @@ impl Tokenstream {
             tokens.push(t);
         }
 
+        if debug {
+            println!("Constructed token stream with {} tokens", tokens.len());
+            println!();
+        }
+
         Self {
             tokens,
             index: 0,
+            debug,
         }
     }
 
@@ -126,6 +143,13 @@ impl Tokenstream {
         let t = self.peek();
         self.index += 1;
 
+        if self.debug {
+            match &t {
+                Some (token) => println!("Extracting token: {}", token),
+                None => println!("Extracting token: (EOF)"),
+            }
+        }
+
         t
     }
 
@@ -142,6 +166,16 @@ impl Tokenstream {
         match next {
             Some (t) => t,
             None => Error::UnexpectedEOF (&last).throw(),
+        }
+    }
+
+    /// Gets the next token, unwraps it, and returns its value.
+    pub fn get(&mut self, class: TokenClass) -> Token {
+        let token = self.next_unwrap();
+
+        match token.class {
+            class => token,
+            _ => Error::Expected (class, token.class).throw(),
         }
     }
 }

@@ -7,9 +7,10 @@ mod infix_parselet;
 // Prefix parselets
 mod number_parselet;
 mod identifier_parselet;
+mod assignment_parselet;
 
 // Infix parselets
-mod assignment_parselet;
+mod reassignment_parselet;
 
 use std::collections::HashMap;
 
@@ -27,17 +28,19 @@ use infix_parselet::InfixParselet;
 
 use number_parselet::NumberParselet;
 use identifier_parselet::IdentifierParselet;
-
 use assignment_parselet::AssignmentParselet;
+
+use reassignment_parselet::ReassignmentParselet;
 
 pub struct Parser {
     prefix_parselets: HashMap<TokenClass, Box<dyn PrefixParselet>>,
     infix_parselets: HashMap<TokenClass, Box<dyn InfixParselet>>,
+    pub debug: bool,
 }
 
 impl Parser {
     /// Constructs a new parser.
-    pub fn new() -> Self {
+    pub fn new(debug: bool) -> Self {
         use TokenClass::*;
 
         let mut prefix_parselets: HashMap<TokenClass, Box<dyn PrefixParselet>> = HashMap::new();
@@ -46,20 +49,22 @@ impl Parser {
         // Declarative grammar: prefix parselets
         prefix_parselets.insert(Number, Box::new(NumberParselet {}));
         prefix_parselets.insert(Identifier, Box::new(IdentifierParselet {}));
+        prefix_parselets.insert(Let, Box::new(AssignmentParselet {}));
 
         // Declarative grammar: infix parselet
-        infix_parselets.insert(Assignment, Box::new(AssignmentParselet {}));
+        infix_parselets.insert(Assignment, Box::new(ReassignmentParselet {}));
 
         Self {
             prefix_parselets,
             infix_parselets,
+            debug,
         }
     }
 
     /// Parses a tokenstream.
     pub fn parse(&self, input: String) -> Vec<Expression> {
         let mut expressions = Vec::new();
-        let mut tokenstream = Tokenstream::from(&input);
+        let mut tokenstream = Tokenstream::from(&input, self.debug);
 
         while let Some(token) = tokenstream.peek() {
             let expr = self.parse_expr(&mut tokenstream, 0);
