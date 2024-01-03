@@ -9,6 +9,7 @@ use colored::*;
 
 use crate::TokenClass;
 
+/// Enumerates the errors thrown by the Carlo language.
 pub enum Error<'a> {
     /// Could not recognize subcommand
     UnrecognizedSubcommand (&'a str),

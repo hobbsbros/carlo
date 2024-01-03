@@ -37,6 +37,7 @@ use assignment_parselet::AssignmentParselet;
 use reassignment_parselet::ReassignmentParselet;
 use binary_operation_parselet::BinaryOperationParselet;
 
+/// Abstracts over the Carlo parser.
 pub struct Parser {
     prefix_parselets: HashMap<TokenClass, Box<dyn PrefixParselet>>,
     infix_parselets: HashMap<TokenClass, Box<dyn InfixParselet>>,

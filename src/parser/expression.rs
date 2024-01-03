@@ -10,6 +10,7 @@ pub enum BinaryOperation {
 }
 
 #[derive(Debug)]
+/// Enumerates the expression available to the Carlo parser.
 pub enum Expression {
     /// Assignment
     Assignment {
