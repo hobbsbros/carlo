@@ -13,6 +13,9 @@ pub enum Subcommand {
     /// Executes a source file
     Run,
 
+    /// Converts a source file into LaTeX
+    Latex,
+
     /// Displays a help menu
     Help,
 
@@ -27,6 +30,7 @@ impl From<&str> for Subcommand {
 
         match input {
             "run" => Run,
+            "latex" => Latex,
             "help" => Help,
             "version" => Version,
             _ => Error::UnrecognizedSubcommand (input).throw(),
