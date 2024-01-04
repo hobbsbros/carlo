@@ -21,8 +21,6 @@ impl PrefixParselet for NumberParselet {
         let mut s = 0.0;
 
         while let Some(t) = tokenstream.peek() {
-            println!("{}", t);
-
             if t.check(TokenClass::Kilogram) {
                 tokenstream.next();
 
