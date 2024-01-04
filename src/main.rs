@@ -2,13 +2,6 @@
 
 use std::{
     collections::HashMap,
-    fs::OpenOptions,
-    io::{
-        Read,
-        stdin,
-        stdout,
-        Write,
-    },
     path::PathBuf,
 };
 
@@ -17,9 +10,10 @@ use colored::*;
 use carlotk::{
     CliArgs,
     Error,
-    Expression,
     Flag,
+    parse,
     Parser,
+    read,
     Subcommand,
 };
 
@@ -73,11 +67,11 @@ fn help(argument: &str, interactive: bool) {
             let subcommand: &str = &read("help >> ");
             println!();
 
-            if subcommand.trim() == "exit" {
+            if subcommand == "exit" {
                 return;
             }
             
-            let help = match hashmap.get(&subcommand.trim()) {
+            let help = match hashmap.get(&subcommand) {
                 Some (h) => h,
                 None => {
                     println!("Subcommand not recognized");
@@ -127,12 +121,7 @@ fn repl(debug: bool) {
         let expr = parser.parse(&buffer);
 
         // Output
-        print!("Out[{}] >> {:#?}", i, expr);
-        match stdout().flush() {
-            Ok (_) => (),
-            Err (_) => Error::CouldNotFlushStdout (i).throw(),
-        };
-        println!();
+        println!("Out[{}] >> {:#?}", i, expr);
         println!();
         
         i += 1;
@@ -152,59 +141,4 @@ fn latex(inputfile: Option<PathBuf>, debug: bool) {
 fn version() {
     println!("{}", "The Carlo Language".truecolor(20, 146, 255).bold());
     println!("Version {}", VERSION);
-}
-
-/// Converts a source file into a list of expressions.
-fn parse(inputfile: Option<PathBuf>, debug: bool) -> Vec<Expression> {
-    if debug {
-        println!("{} running Carlo in debug mode", "(notice)".truecolor(220, 180, 0).bold());
-        println!();
-    }
-
-    // Read data from input file
-    let f = match inputfile {
-        Some (i) => i,
-        None => Error::<&str>::NoInputFile.throw(),
-    };
-
-    let strf = format!("{}", f.display());
-
-    let option_file = OpenOptions::new()
-        .read(true)
-        .open(f);
-
-    let mut file = match option_file {
-        Ok (f) => f,
-        _ => Error::CouldNotFindFile (&strf).throw(),
-    };
-
-    let mut contents = String::new();
-    
-    match file.read_to_string(&mut contents) {
-        Ok (_) => (),
-        _ => Error::CouldNotReadFile (&strf).throw(),
-    };
-
-    // Construct parser
-    let parser = Parser::new(debug);
-
-    parser.parse(&contents)
-}
-
-/// Reads user input.
-fn read(prompt: &str) -> String {
-    let mut buffer = String::new();
-
-    print!("{}", prompt);
-    
-    match stdout().flush() {
-        Ok (_) => (),
-        Err (_) => Error::CouldNotFlushStdout (prompt).throw(),
-    };
-    match stdin().read_line(&mut buffer) {
-        Ok (_) => (),
-        Err (_) => Error::CouldNotReadLine (prompt).throw(),
-    };
-
-    buffer
 }
