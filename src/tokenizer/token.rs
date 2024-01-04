@@ -84,6 +84,25 @@ impl From<TokenClass> for u8 {
     }
 }
 
+/// Maps characters to classes of tokens that may
+/// begin with this character.
+impl From<char> for TokenClass {
+    fn from(c: char) -> Self {
+        use TokenClass::*;
+
+        match c {
+            'a'..='z' | 'A'..='Z' | '_' => Identifier,
+            '=' => Assignment,
+            '+' => Plus,
+            '-' => Minus,
+            '*' => Times,
+            '/' => Divide,
+            '0'..='9' => Number,
+            _ => Unknown,
+        }
+    }
+}
+
 impl fmt::Display for TokenClass {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         use TokenClass::*;

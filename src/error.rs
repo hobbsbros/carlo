@@ -7,46 +7,44 @@ use std::{
 
 use colored::*;
 
-use crate::TokenClass;
-
 /// Enumerates the errors thrown by the Carlo language.
-pub enum Error<'a> {
+pub enum Error<T: fmt::Display> {
     /// Could not recognize subcommand
-    UnrecognizedSubcommand (&'a str),
+    UnrecognizedSubcommand (T),
 
     /// Could not recognize flag
-    UnrecognizedFlag (&'a str),
+    UnrecognizedFlag (T),
 
     /// Could not recognize argument
-    UnrecognizedArgument (&'a str),
+    UnrecognizedArgument (T),
 
     /// Could not find file
-    CouldNotFindFile (&'a str),
+    CouldNotFindFile (T),
 
     /// Could not read file
-    CouldNotReadFile (&'a str),
+    CouldNotReadFile (T),
 
     /// No input file
     NoInputFile,
 
     /// Could not parse number
-    CouldNotParseNumber (&'a str),
+    CouldNotParseNumber (T),
 
     /// Could not parse expression
-    CouldNotParse (&'a str),
+    CouldNotParse (T),
 
     /// Unexpected EOF
-    UnexpectedEOF (&'a str),
+    UnexpectedEOF (T),
 
     /// Expected
-    Expected (TokenClass, TokenClass),
+    Expected (T, T),
 
     /// No help available
-    NoHelpAvailable (&'a str),
+    NoHelpAvailable (T),
 }
 
 /// Converts an error into a string.
-impl<'a> fmt::Display for Error<'a> {
+impl<T: fmt::Display> fmt::Display for Error<T> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         use Error::*;
 
@@ -58,9 +56,9 @@ impl<'a> fmt::Display for Error<'a> {
             CouldNotReadFile (s) => format!("Could not read file: {}", s),
             NoInputFile => format!("No input file provided"),
             CouldNotParseNumber (s) => format!("Could not parse number: {}", s),
-            CouldNotParse (s) => format!("Could not parse near token: {}", s),
-            UnexpectedEOF (s) => format!("Unexpected EOF near token: {}", s),
-            Expected (x, a) => format!("Expected token of class: {} but instead found token of class: {}", x, a),
+            CouldNotParse (s) => format!("Could not parse near token ({})", s),
+            UnexpectedEOF (s) => format!("Unexpected EOF near token ({})", s),
+            Expected (x, a) => format!("Expected token of class ({}) but instead found token of class ({})", x, a),
             NoHelpAvailable (s) => format!("No help available for subcommand: {}", s),
         };
 
@@ -68,7 +66,7 @@ impl<'a> fmt::Display for Error<'a> {
     }
 }
 
-impl<'a> Error<'a> {
+impl<T: fmt::Display> Error<T> {
     pub fn throw(&self) -> ! {
         println!("{} {}", "(error)".truecolor(255, 60, 40).bold(), self);
         exit(0);

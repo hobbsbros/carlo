@@ -15,6 +15,9 @@ pub struct Charstream {
     index: usize,
 }
 
+/// Specifies characters used to break tokens.
+const TOKENBREAK: [char; 3] = [' ', '\n', ';'];
+
 impl Charstream {
     /// Constructs a new character stream from an input string.
     pub fn from(input: &str) -> Self {
@@ -33,23 +36,13 @@ impl Charstream {
             None => return None,
         };
 
-        let class = match peek {
-            'A'..='Z' | 'a'..='z' | '_' => Identifier,
-            '=' => Assignment,
-            '+' => Plus,
-            '-' => Minus,
-            '*' => Times,
-            '/' => Divide,
-            '0'..='9' => Number,
-            _ => Unknown,
-        };
+        let class: TokenClass = peek.into();
 
         let mut value = String::new();
 
         while let Some (c) = self.peek() {
-            self.next();
-
-            if [' ', '\n', ';'].contains(&c) {
+            if TOKENBREAK.contains(&c) {
+                self.next();
                 break;
             }
 
@@ -73,7 +66,11 @@ impl Charstream {
                 value.push(c);
             } else if ('0'..'9').contains(&c) && class == Number {
                 value.push(c);
+            } else {
+                break;
             }
+
+            self.next();
         }
 
         // Special cases
@@ -194,7 +191,7 @@ impl Tokenstream {
 
 #[test]
 fn test_tokenization() {
-    let tokens = Tokenstream::from("hello_world = 3");
+    let tokens = Tokenstream::from("hello_world = 3", false);
 
     println!("{:#?}", tokens);
 }

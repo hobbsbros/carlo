@@ -64,7 +64,7 @@ fn run(inputfile: Option<PathBuf>, debug: bool) {
     // Read data from input file
     let f = match inputfile {
         Some (i) => i,
-        None => Error::NoInputFile.throw(),
+        None => Error::<&str>::NoInputFile.throw(),
     };
 
     let strf = format!("{}", f.display());
