@@ -12,12 +12,27 @@ use super::{
     Tokenstream,
 };
 
-const UNITS: [(&str, (f64, f64, f64, f64)); 5] = [
-    ("g", (0.001, 1.0, 0.0, 0.0)),
-    ("m", (1.0, 0.0, 1.0, 0.0)),
-    ("s", (1.0, 0.0, 0.0, 1.0)),
-    ("N", (1.0, 1.0, 1.0, -2.0)),
-    ("Pa", (1.0, 1.0, -1.0, -2.0)),
+/// Defines the units available to this parselet.
+/// Each unit is structured as (name, (multiplier, kg, m, s, A, K, mol))
+const UNITS: [(&str, (f64, f64, f64, f64, f64, f64, f64)); 16] = [
+    ("g", (0.001, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0)),
+    ("m", (1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0)),
+    ("s", (1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0)),
+    ("N", (1.0, 1.0, 1.0, -2.0, 0.0, 0.0, 0.0)),
+    ("Pa", (1.0, 1.0, -1.0, -2.0, 0.0, 0.0, 0.0)),
+    ("L", (0.001, 0.0, 3.0, 0.0, 0.0, 0.0, 0.0)),
+
+    ("Hz", (1.0, 0.0, 0.0, -1.0, 0.0, 0.0, 0.0)),
+    ("J", (1.0, 1.0, 2.0, -2.0, 0.0, 0.0, 0.0)),
+    ("W", (1.0, 1.0, 2.0, -3.0, 0.0, 0.0, 0.0)),
+    ("A", (1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0)),
+    ("C", (1.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0)),
+    ("V", (1.0, 1.0, 2.0, -3.0, -1.0, 0.0, 0.0)),
+    ("O", (1.0, 1.0, 2.0, -3.0, -2.0, 0.0, 0.0)),
+    ("F", (1.0, -1.0, -2.0, 4.0, 2.0, 0.0, 0.0)),
+
+    ("K", (1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0)),
+    ("mol", (1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0)),
 ];
 
 const PREFIXES: [(char, f64); 7] = [
@@ -76,13 +91,15 @@ fn split_string(input: &str) -> (String, f64) {
 }
 
 /// Parses a string into a unit.
-fn parse_unit(mut input: &str) -> (f64, f64, f64, f64) {
+fn parse_unit(mut input: &str) -> (f64, f64, f64, f64, f64, f64, f64) {
     let prefixes = HashMap::from(PREFIXES);
     let units = HashMap::from(UNITS);
 
     // Strips the prefix, if it exists
-    let (a, _) = split_string(&input);
-    let mut multiplier = if a.len() > 1 {
+    let (al, _) = split_string(&input);
+    let mut multiplier = if let Some(_) = units.get(&*al) {
+        1.0
+    } else {
         match prefixes.get(&input.chars().nth(0).unwrap()) {
             Some (p) => {
                 let mut inputchars = input.chars();
@@ -92,14 +109,20 @@ fn parse_unit(mut input: &str) -> (f64, f64, f64, f64) {
             },
             None => 1.0,
         }
-    } else {
-        1.0
     };
 
     let (alpha, exp) = split_string(&input);
 
-    let (mult, mut kg, mut m, mut s) = match units.get(&*alpha) {
-        Some (u) => (u.0, u.1, u.2, u.3),
+    let (
+        mult,
+        mut kg,
+        mut m,
+        mut s,
+        mut a,
+        mut k,
+        mut mol,
+    ) = match units.get(&*alpha) {
+        Some (u) => *u,
         None => Error::CouldNotParseNumber (&input).throw(),
     };
 
@@ -110,8 +133,11 @@ fn parse_unit(mut input: &str) -> (f64, f64, f64, f64) {
     kg *= exp;
     m *= exp;
     s *= exp;
+    a *= exp;
+    k *= exp;
+    mol *= exp;
 
-    (multiplier, kg, m, s)
+    (multiplier, kg, m, s, a, k, mol)
 }
 
 pub struct NumberParselet {}
@@ -132,17 +158,23 @@ impl PrefixParselet for NumberParselet {
         let mut kilogram = 0.0;
         let mut meter = 0.0;
         let mut second = 0.0;
+        let mut amp = 0.0;
+        let mut kelvin = 0.0;
+        let mut mole = 0.0;
 
         while let Some(t) = tokenstream.peek() {
             if t.check(TokenClass::Identifier) && check_unit(&t.value) {
                 tokenstream.next();
                 
-                let (mult, kg, m, s) = parse_unit(&t.value);
+                let (mult, kg, m, s, a, k, mol) = parse_unit(&t.value);
 
                 multiplier *= mult;
                 kilogram += kg;
                 meter += m;
                 second += s;
+                amp += a;
+                kelvin += k;
+                mole += mol;
             } else {
                 break;
             }
@@ -154,6 +186,9 @@ impl PrefixParselet for NumberParselet {
                 kg: kilogram,
                 m: meter,
                 s: second,
+                a: amp,
+                k: kelvin,
+                mol: mole,
             },
             _ => Error::CouldNotParseNumber (&token.value).throw(),
         }

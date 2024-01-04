@@ -30,6 +30,9 @@ pub enum Expression {
         kg: f64,
         m: f64,
         s: f64,
+        a: f64,
+        k: f64,
+        mol: f64,
     },
 
     /// Identifier
