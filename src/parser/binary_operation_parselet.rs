@@ -30,6 +30,6 @@ impl InfixParselet for BinaryOperationParselet {
             left: Box::new(left),
             oper,
             right: Box::new(parser.parse_expr(tokenstream, token.precedence(), nesting + 1)),
-        }
+        }.simplify()
     }
 }
