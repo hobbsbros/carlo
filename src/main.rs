@@ -120,9 +120,21 @@ fn repl(debug: bool) {
         // Parse input
         let expr = parser.parse(&buffer);
 
+        // Simplify
+        let mut output = String::new();
+        for e in expr {
+            output.push_str(&format!(
+                "{}\n",
+                e,
+            ));
+        }
+
         // Output
-        println!("Out[{}] >> {:#?}", i, expr);
-        println!();
+        println!("Out[{}] >> {}", i, output);
+
+        if output.len() == 0 {
+            println!();
+        }
         
         i += 1;
     }

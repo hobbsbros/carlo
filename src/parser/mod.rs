@@ -1,6 +1,5 @@
 //! Parser for the Carlo language.
 
-mod expression;
 mod prefix_parselet;
 mod infix_parselet;
 
@@ -16,15 +15,14 @@ mod binary_operation_parselet;
 use std::collections::HashMap;
 
 pub use crate::{
+    BinaryOperation,
     Error,
+    Expression,
+    PREFIXES,
     Token,
     TokenClass,
     Tokenstream,
-};
-
-pub use expression::{
-    BinaryOperation,
-    Expression,
+    UNITS,
 };
 
 use prefix_parselet::PrefixParselet;

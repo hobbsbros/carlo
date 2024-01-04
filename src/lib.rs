@@ -2,8 +2,10 @@
 
 mod cli;
 mod error;
+mod expression;
 mod parser;
 mod tokenizer;
+mod unit;
 
 use std::{
     fs::OpenOptions,
@@ -26,15 +28,22 @@ pub use cli::{
 
 pub use error::Error;
 
+pub use expression::{
+    BinaryOperation,
+    Expression,
+};
+
 pub use tokenizer::{
     Token,
     TokenClass,
     Tokenstream,
 };
 
-pub use parser::{
-    Expression,
-    Parser,
+pub use parser::Parser;
+
+pub use unit::{
+    PREFIXES,
+    UNITS,
 };
 
 /// Converts a source file into a list of expressions.

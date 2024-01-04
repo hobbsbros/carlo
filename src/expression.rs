@@ -1,5 +1,9 @@
 //! Defines Carlo language expressions.
 
+use std::fmt;
+
+use crate::UNITS;
+
 #[derive(Clone, Copy, Debug)]
 /// Defines binary operations in Carlo.
 pub enum BinaryOperation {
@@ -13,6 +17,9 @@ impl BinaryOperation {
     /// Simplifies this binary operation.
     pub fn simplify(&self, left: &Expression, right: &Expression) -> Expression {
         use Expression::*;
+
+        let left = &left.simplify();
+        let right = &right.simplify();
 
         if let Float {
             value: l_value,
@@ -77,6 +84,21 @@ impl BinaryOperation {
     }
 }
 
+impl fmt::Display for BinaryOperation {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        use BinaryOperation::*;
+
+        let s = match self {
+            Add => "+",
+            Sub => "-",
+            Mul => "*",
+            Div => "/",
+        };
+
+        write!(f, "{}", s)
+    }
+}
+
 #[derive(Clone, Debug)]
 /// Enumerates the expression available to the Carlo parser.
 pub enum Expression {
@@ -127,5 +149,96 @@ impl Expression {
             } => oper.simplify(left, right),
             _ => (*self).to_owned(),
         }
+    }
+}
+
+fn format_unit(
+    mut value: f64,
+    mut kg: f64,
+    mut m: f64,
+    mut s: f64,
+    mut a: f64,
+    mut k: f64,
+    mut mol: f64,
+) -> String {
+    let mut output = String::new();
+
+    // Iterate through units and add values
+    for (name, unit) in UNITS {
+        if (kg, m, s, a, k, mol) == (unit.1, unit.2, unit.3, unit.4, unit.5, unit.6) {
+            value /= unit.0;
+
+            output.push_str(&format!(" {}", name));
+
+            kg -= unit.1;
+            m -= unit.2;
+            s -= unit.3;
+            a -= unit.4;
+            k -= unit.5;
+            mol -= unit.6;
+        }
+    }
+
+    for (unit, pow) in [
+        ("kg", kg),
+        ("m", m),
+        ("s", s),
+        ("A", a),
+        ("K", k),
+        ("mol", mol),
+    ] {
+        if pow == 1.0 {
+            output.push_str(&format!(" {}", unit));
+        } else if pow != 0.0 {
+            output.push_str(&format!(" {}^{}", unit, pow));
+        }
+    }
+
+    format!("{:.4}{}", value, output)
+}
+
+impl fmt::Display for Expression {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        use Expression::*;
+
+        let expr = self.simplify();
+
+        let string = match expr {
+            Assignment {
+                left: _left,
+                right,
+            } => {
+                format!("{}", right)
+            },
+            Reassignment {
+                left: _left,
+                right,
+            } => {
+                format!("{}", right)
+            },
+            Float {
+                value,
+                kg,
+                m,
+                s,
+                a,
+                k,
+                mol,
+            } => {
+                format_unit(value, kg, m , s, a, k, mol)
+            },
+            Identifier (s) => {
+                format!("{}", s)
+            },
+            BinOp {
+                left,
+                oper,
+                right,
+            } => {
+                format!("{} {} {}", left, oper, right)
+            },
+        };
+
+        write!(f, "{}", string)
     }
 }
