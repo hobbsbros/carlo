@@ -52,7 +52,18 @@ impl From<&str> for Flag {
 
         match input {
             "debug" => Debug,
-            "d" => Debug,
+            _ => Error::UnrecognizedFlag (input).throw(),
+        }
+    }
+}
+
+/// Converts a character into a flag.
+impl From<char> for Flag {
+    fn from(input: char) -> Self {
+        use Flag::*;
+
+        match input {
+            'd' => Debug,
             _ => Error::UnrecognizedFlag (input).throw(),
         }
     }
@@ -109,15 +120,16 @@ impl CliArgs {
         while i < args.len() {
             let arg = &args[i];
 
-            let flag: Flag = if arg.starts_with("--") {
-                arg[2..].into()
+            if arg.starts_with("--") {
+                flags.push(arg[2..].into());
             } else if arg.starts_with("-") {
-                arg[1..].into()
+                for c in arg[1..].chars() {
+                    flags.push(c.into());
+                }
             } else {
                 Error::UnrecognizedArgument (arg).throw();
-            };
-            
-            flags.push(flag);
+            }
+
             i += 1;
         }
     
