@@ -62,15 +62,6 @@ pub enum TokenClass {
     /// Number
     Number,
 
-    /// Kilogram
-    Kilogram,
-
-    /// Meter
-    Meter,
-
-    /// Second
-    Second,
-
     /// Unknown
     Unknown,
 }
@@ -89,9 +80,6 @@ impl From<TokenClass> for u8 {
             Minus       => 2,
             Times       => 3,
             Divide      => 3,
-            Kilogram    => 4,
-            Meter       => 4,
-            Second      => 4,
         }
     }
 }
@@ -129,9 +117,6 @@ impl fmt::Display for TokenClass {
             Minus => "Minus",
             Times => "Times",
             Divide => "Divide",
-            Kilogram => "Kilogram",
-            Meter => "Meter",
-            Second => "Second",
         };
 
         write!(f, "{}", string)

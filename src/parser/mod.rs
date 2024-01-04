@@ -54,6 +54,7 @@ impl Parser {
 
         // Declarative grammar: prefix parselets
         prefix_parselets.insert(Number, Box::new(NumberParselet {}));
+        prefix_parselets.insert(Minus, Box::new(NumberParselet {}));
         prefix_parselets.insert(Identifier, Box::new(IdentifierParselet {}));
         prefix_parselets.insert(Let, Box::new(AssignmentParselet {}));
 

@@ -50,7 +50,7 @@ impl Charstream {
             None => return None,
         };
 
-        let mut class: TokenClass = peek.into();
+        let class: TokenClass = peek.into();
 
         let mut value = String::new();
 
@@ -78,24 +78,10 @@ impl Charstream {
                 value.push(c);
             } else if c == '/' && class == Divide {
                 value.push(c);
-            } else if (('0'..='9').contains(&c) || c == '.') && class == Number {
-                value.push(c);
-            } else if (('0'..='9').contains(&c) || c == '.' || c == '-') && class == Kilogram {
-                value.push(c);
-            } else if (('0'..='9').contains(&c) || c == '.' || c == '-') && class == Meter {
-                value.push(c);
-            } else if (('0'..='9').contains(&c) || c == '.' || c == '-') && class == Second {
+            } else if (('0'..='9').contains(&c) || c == '.' || c == 'e' || c == '+' || c == '-') && class == Number {
                 value.push(c);
             } else {
                 break;
-            }
-
-            if value.as_str() == "kg" {
-                class = Kilogram;
-            } else if value.as_str() == "m" {
-                class = Meter;
-            } else if value.as_str() == "s" {
-                class = Second;
             }
 
             self.next();
