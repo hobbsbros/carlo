@@ -18,6 +18,9 @@ pub struct Charstream {
 /// Specifies characters used to break tokens.
 const TOKENBREAK: [char; 3] = [' ', '\n', ';'];
 
+/// Specifies whitespace characters.
+const WHITESPACE: [char; 3] = [' ', '\t', '\n'];
+
 impl Charstream {
     /// Constructs a new character stream from an input string.
     pub fn from(input: &str) -> Self {
@@ -27,16 +30,27 @@ impl Charstream {
         }
     }
 
+    /// Skip whitespace.
+    fn skip(&mut self) {
+        if let Some (c) = self.peek() {
+            if WHITESPACE.contains(&c) {
+                self.next();
+            }
+        }
+    }
+
     /// Gets the next token from this character stream.
     pub fn get(&mut self) -> Option<Token> {
         use TokenClass::*;
+
+        self.skip();
 
         let peek = match self.peek() {
             Some (p) => p,
             None => return None,
         };
 
-        let class: TokenClass = peek.into();
+        let mut class: TokenClass = peek.into();
 
         let mut value = String::new();
 
@@ -64,10 +78,24 @@ impl Charstream {
                 value.push(c);
             } else if c == '/' && class == Divide {
                 value.push(c);
-            } else if ('0'..'9').contains(&c) && class == Number {
+            } else if (('0'..='9').contains(&c) || c == '.') && class == Number {
+                value.push(c);
+            } else if (('0'..='9').contains(&c) || c == '.' || c == '-') && class == Kilogram {
+                value.push(c);
+            } else if (('0'..='9').contains(&c) || c == '.' || c == '-') && class == Meter {
+                value.push(c);
+            } else if (('0'..='9').contains(&c) || c == '.' || c == '-') && class == Second {
                 value.push(c);
             } else {
                 break;
+            }
+
+            if value.as_str() == "kg" {
+                class = Kilogram;
+            } else if value.as_str() == "m" {
+                class = Meter;
+            } else if value.as_str() == "s" {
+                class = Second;
             }
 
             self.next();

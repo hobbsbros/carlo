@@ -24,11 +24,13 @@ pub enum Expression {
         right: Box<Expression>,
     },
 
-    /// 64-bit integer
-    Integer (i64),
-
-    /// 64-bit floating-point
-    Float (f64),
+    /// 64-bit dimensioned floating-point
+    Float {
+        value: f64,
+        kg: f64,
+        m: f64,
+        s: f64,
+    },
 
     /// Identifier
     Identifier (String),

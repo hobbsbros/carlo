@@ -39,6 +39,9 @@ pub enum Error<T: fmt::Display> {
     /// Expected
     Expected (T, T),
 
+    /// Could not parse exponent
+    CouldNotParseExponent (T),
+
     /// No help available
     NoHelpAvailable (T),
 }
@@ -59,6 +62,7 @@ impl<T: fmt::Display> fmt::Display for Error<T> {
             CouldNotParse (s) => format!("Could not parse near token ({})", s),
             UnexpectedEOF (s) => format!("Unexpected EOF near token ({})", s),
             Expected (x, a) => format!("Expected token of class ({}) but instead found token of class ({})", x, a),
+            CouldNotParseExponent (s) => format!("Could not parse as numeric exponent: {}", s),
             NoHelpAvailable (s) => format!("No help available for subcommand: {}", s),
         };
 
