@@ -10,6 +10,9 @@ use crate::Error;
 #[derive(Clone, Copy, PartialEq, Eq)]
 /// Subcommands for the Carlo language executable.
 pub enum Subcommand {
+    /// Executes a REPL
+    Repl,
+
     /// Executes a source file
     Run,
 
@@ -29,6 +32,7 @@ impl From<&str> for Subcommand {
         use Subcommand::*;
 
         match input {
+            "repl" => Repl,
             "run" => Run,
             "latex" => Latex,
             "help" => Help,
@@ -43,6 +47,9 @@ impl From<&str> for Subcommand {
 pub enum Flag {
     /// Runs the Carlo language parser in debug mode
     Debug,
+
+    /// Runs the Carlo language help menu in interactive mode
+    Interactive,
 }
 
 /// Converts a string into a flag.
@@ -52,6 +59,7 @@ impl From<&str> for Flag {
 
         match input {
             "debug" => Debug,
+            "interactive" => Interactive,
             _ => Error::UnrecognizedFlag (input).throw(),
         }
     }
@@ -64,6 +72,7 @@ impl From<char> for Flag {
 
         match input {
             'd' => Debug,
+            'i' => Interactive,
             _ => Error::UnrecognizedFlag (input).throw(),
         }
     }
@@ -93,26 +102,24 @@ impl CliArgs {
         let subcommand = if args.len() > 1 {
             args[1].as_str().into()
         } else {
-            Subcommand::Help
+            Subcommand::Repl
         };
 
-        let mut argument = None;
+        let mut argument: Option<String> = None;
+        let mut inputfile: Option<PathBuf> = None;
 
-        // Parse argument
-        if subcommand == Subcommand::Help && args.len() > 2 {
+        // Parse argument or input file
+        if subcommand == Subcommand::Help && args.len() > 2 && !args[2].starts_with("-") {
             argument = Some (args[2].to_owned());
+        } else if subcommand != Subcommand::Help && args.len() > 2 {
+            inputfile = Some (args[2].as_str().into());
         }
-
-        // Parse input file
-        let inputfile = if args.len() > 2 {
-            Some (args[2].as_str().into())
-        } else {
-            None
-        };
 
         // Parse flags
         let mut flags = Vec::new();
         let mut i = if let Some (_) = &inputfile {
+            3
+        } else if let Some(_) = &argument {
             3
         } else {
             2
@@ -132,7 +139,7 @@ impl CliArgs {
 
             i += 1;
         }
-    
+
         Self {
             subcommand,
             argument,

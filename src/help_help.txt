@@ -4,6 +4,8 @@ Provides help to the user.
 
 USAGE
     carlo help
-    carlo help [subcommand]    
+    carlo help [subcommand]
+    carlo help [flags]
 
-Executing `carlo` without a subcommand will display the help menu.
+FLAGS
+    -i, --interactive   opens an interactive help menu

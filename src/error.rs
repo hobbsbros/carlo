@@ -44,6 +44,12 @@ pub enum Error<T: fmt::Display> {
 
     /// No help available
     NoHelpAvailable (T),
+
+    /// Could not read REPL line
+    CouldNotReadLine (T),
+
+    /// Could not flush stdout
+    CouldNotFlushStdout (T),
 }
 
 /// Converts an error into a string.
@@ -64,6 +70,8 @@ impl<T: fmt::Display> fmt::Display for Error<T> {
             Expected (x, a) => format!("Expected token of class ({}) but instead found token of class ({})", x, a),
             CouldNotParseExponent (s) => format!("Could not parse as numeric exponent: {}", s),
             NoHelpAvailable (s) => format!("No help available for subcommand: {}", s),
+            CouldNotReadLine (i) => format!("Could not read user input near In[{}]", i),
+            CouldNotFlushStdout (i) => format!("Could not flust stdout near In[{}]", i),
         };
 
         write!(f, "{}", string)

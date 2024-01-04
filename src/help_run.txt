@@ -7,6 +7,4 @@ USAGE
     carlo run [input file] [flags]
 
 FLAGS
-    -d, --debug     
-
-Executing `carlo` without a subcommand will display the help menu.
+    -d, --debug     run in debug mode

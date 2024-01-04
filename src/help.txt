@@ -11,6 +11,6 @@ SUBCOMMANDS
     version     displays the current version of Carlo
 
 HELP
+    Execute `carlo help` to see this menu.
     Execute `carlo help [subcommand]` to get help on a specific subcommand.
-
-Executing `carlo` without a subcommand will display this help menu.
+    Execute `carlo help -i` for an interactive help menu.

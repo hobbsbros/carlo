@@ -72,9 +72,9 @@ impl Parser {
     }
 
     /// Parses a tokenstream.
-    pub fn parse(&self, input: String) -> Vec<Expression> {
+    pub fn parse(&self, input: &str) -> Vec<Expression> {
         let mut expressions = Vec::new();
-        let mut tokenstream = Tokenstream::from(&input, self.debug);
+        let mut tokenstream = Tokenstream::from(input, self.debug);
 
         while let Some(_) = tokenstream.peek() {
             let expr = self.parse_expr(&mut tokenstream, 0, 0);
