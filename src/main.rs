@@ -18,7 +18,7 @@ use carlotk::{
     Subcommand,
 };
 
-const VERSION: &str = "0.1.0";
+const VERSION: &str = "0.2.1";
 
 const HELP: [(&str, &str); 5] = [
     ("", include_str!("./help.txt")),
