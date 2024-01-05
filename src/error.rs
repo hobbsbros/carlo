@@ -55,7 +55,7 @@ pub enum Error<T: fmt::Display> {
     UndeclaredVariable (T),
 
     /// Unmatched units
-    UnmatchedUnits (T, T),
+    UnmatchedUnits (T, T, T),
 }
 
 /// Converts an error into a string.
@@ -79,7 +79,7 @@ impl<T: fmt::Display> fmt::Display for Error<T> {
             CouldNotReadLine (i) => format!("Could not read user input near In[{}]", i),
             CouldNotFlushStdout (i) => format!("Could not flust stdout near In[{}]", i),
             UndeclaredVariable (s) => format!("Found undeclared variable: {}", s),
-            UnmatchedUnits (l, r) => format!("Unmatched unit powers ({}) and ({})", l, r),
+            UnmatchedUnits (u, l, r) => format!("Unmatched unit powers ({}^{}) and ({}^{})", u, l, u, r),
         };
 
         write!(f, "{}", string)

@@ -59,7 +59,7 @@ pub fn parse(inputfile: Option<PathBuf>, debug: bool) -> Vec<Expression> {
     // Read data from input file
     let f = match inputfile {
         Some (i) => i,
-        None => Error::<&str>::NoInputFile.throw(),
+        None => return Vec::new(),
     };
 
     let strf = format!("{}", f.display());

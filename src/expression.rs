@@ -41,12 +41,12 @@ impl BinaryOperation {
             } = right {
                 Float {
                     value: self.oper_value(l_value, r_value),
-                    kg: self.oper_unit(l_kg, r_kg),
-                    m: self.oper_unit(l_m, r_m),
-                    s: self.oper_unit(l_s, r_s),
-                    a: self.oper_unit(l_a, r_a),
-                    k: self.oper_unit(l_k, r_k),
-                    mol: self.oper_unit(l_mol, r_mol),
+                    kg: self.oper_unit("kg", l_kg, r_kg),
+                    m: self.oper_unit("m", l_m, r_m),
+                    s: self.oper_unit("s", l_s, r_s),
+                    a: self.oper_unit("A", l_a, r_a),
+                    k: self.oper_unit("K", l_k, r_k),
+                    mol: self.oper_unit("mol", l_mol, r_mol),
                 }
             } else {
                 Expression::Null
@@ -69,14 +69,14 @@ impl BinaryOperation {
     }
 
     /// Operate on two units.
-    pub fn oper_unit(&self, left: &f64, right: &f64) -> f64 {
+    pub fn oper_unit(&self, unit: &str, left: &f64, right: &f64) -> f64 {
         use BinaryOperation::*;
 
         match self {
             Add | Sub => if left == right {
                 return *left
             } else {
-                Error::UnmatchedUnits (left, right).warn();
+                Error::UnmatchedUnits (unit, &left.to_string(), &right.to_string()).warn();
                 return 0.0;
             },
             Mul => left + right,
@@ -182,7 +182,7 @@ fn format_unit(
         }
     }
 
-    format!("{:.4}{}", value, output)
+    format!("{:.6e}{}", value, output)
 }
 
 impl fmt::Display for Expression {

@@ -41,6 +41,7 @@ fn main() {
             args.contains(Interactive),
         ),
         Repl => repl(
+            args.inputfile.clone(),
             args.contains(Debug),
         ),
         Run => run(
@@ -100,7 +101,7 @@ fn help(argument: &str, interactive: bool) {
     }
 }
 
-fn repl(debug: bool) {
+fn repl(inputfile: Option<PathBuf>, debug: bool) {
     let mut i = 0;
 
     println!("{}", "The Carlo Language".truecolor(20, 146, 255).bold());
@@ -110,6 +111,11 @@ fn repl(debug: bool) {
 
     let parser = Parser::new(debug);
     let mut env = Environment::new();
+
+    // Import
+    let imported = parse(inputfile, debug);
+
+    env.evaluate(&imported);
 
     loop {
         // Prompt user
