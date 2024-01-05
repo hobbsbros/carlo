@@ -25,18 +25,12 @@ impl Environment {
     }
 
     /// Looks up a variable in this environment.
-    fn lookup(&self, name: &String) -> Expression {
-        match self.variables.get(name) {
-            Some (expr) => expr.to_owned(),
-            None => {
-                Error::UndeclaredVariable (name).warn();
-                Expression::Null
-            },
-        }
+    fn lookup(&self, name: &String) -> Option<Expression> {
+        self.variables.get(name).cloned()
     }
 
     /// Simplifies an expression in this environment.
-    fn simplify(&mut self, expr: &Expression) -> Expression {
+    fn simplify(&mut self, expr: &Expression, resolve_names: bool) -> Expression {
         use Expression::*;
 
         match expr {
@@ -44,7 +38,7 @@ impl Environment {
                 left,
                 right,
             } => {
-                let sr = self.simplify(right);
+                let sr = self.simplify(right, false);
                 self.register(&left, &sr);
                 sr.to_owned()
             },
@@ -52,8 +46,14 @@ impl Environment {
                 left,
                 right,
             } => {
-                let _ = self.lookup(&left);
-                let sr = self.simplify(right);
+                match self.lookup(&left) {
+                    Some (_) => (),
+                    None => {
+                        Error::UndeclaredVariable (&left).warn();
+                        return Null;
+                    },
+                };
+                let sr = self.simplify(right, false);
                 self.register(&left, &sr);
                 sr.to_owned()
             },
@@ -66,14 +66,21 @@ impl Environment {
                 k: _,
                 mol: _,
             } => expr.to_owned(),
-            Identifier (s) => self.lookup(&s),
+            Identifier (s) => if resolve_names {
+                match self.lookup(&s) {
+                    Some (e) => self.simplify(&e, true),
+                    None => expr.to_owned(),
+                }
+            } else {
+                expr.to_owned()
+            },
             BinOp {
                 left,
                 oper,
                 right,
             } => {
-                let sl = self.simplify(left);
-                let sr = self.simplify(right);
+                let sl = self.simplify(left, resolve_names);
+                let sr = self.simplify(right, resolve_names);
                 oper.simplify(&sl, &sr)
             },
             Null => Null,
@@ -85,7 +92,7 @@ impl Environment {
         let mut output = String::new();
 
         for expr in expressions {
-            let out = self.simplify(expr);
+            let out = self.simplify(expr, true);
             output.push_str(&format!("{}\n", out));
         }
 
@@ -97,7 +104,7 @@ impl Environment {
         let mut output = String::new();
 
         for expr in expressions {
-            let out = self.simplify(expr);
+            let out = self.simplify(expr, true);
             output.push_str(&format!("{}\n", out.latex()));
         }
 

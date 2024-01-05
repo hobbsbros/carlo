@@ -39,6 +39,7 @@ impl BinaryOperation {
                 k: r_k,
                 mol: r_mol,
             } = right {
+                // Left & Right are numeric
                 Float {
                     value: self.oper_value(l_value, r_value),
                     kg: self.oper_unit("kg", l_kg, r_kg),
@@ -49,10 +50,19 @@ impl BinaryOperation {
                     mol: self.oper_unit("mol", l_mol, r_mol),
                 }
             } else {
-                Expression::Null
+                // Left is numeric, Right is not
+                BinOp {
+                    left: Box::new(left.to_owned()),
+                    oper: *self,
+                    right: Box::new(right.to_owned()),
+                }
             }
         } else {
-            Expression::Null
+            BinOp {
+                left: Box::new(left.to_owned()),
+                oper: *self,
+                right: Box::new(right.to_owned()),
+            }
         }
     }
 
@@ -227,7 +237,7 @@ fn format_unit(
         }
     }
 
-    format!("{:.6e}{}", value, output)   
+    format!("{}{}", value, output)   
 }
 
 fn latex_unit(
