@@ -227,7 +227,7 @@ fn format_unit(
         }
     }
 
-    format!("{}{}", value, output)
+    format!("{:.6e}{}", value, output)   
 }
 
 fn latex_unit(
