@@ -1,6 +1,7 @@
 //! Main library for the Carlo language.
 
 mod cli;
+mod environment;
 mod error;
 mod expression;
 mod parser;
@@ -25,6 +26,8 @@ pub use cli::{
     Flag,
     Subcommand,
 };
+
+pub use environment::Environment;
 
 pub use error::Error;
 

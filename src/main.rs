@@ -9,6 +9,7 @@ use colored::*;
 
 use carlotk::{
     CliArgs,
+    Environment,
     Error,
     Flag,
     parse,
@@ -108,6 +109,7 @@ fn repl(debug: bool) {
     println!();
 
     let parser = Parser::new(debug);
+    let mut env = Environment::new();
 
     loop {
         // Prompt user
@@ -119,15 +121,9 @@ fn repl(debug: bool) {
 
         // Parse input
         let expr = parser.parse(&buffer);
-
-        // Simplify
-        let mut output = String::new();
-        for e in expr {
-            output.push_str(&format!(
-                "{}\n",
-                e,
-            ));
-        }
+        
+        // Evaluate input
+        let output = env.evaluate(&expr);
 
         // Output
         println!("Out[{}] >> {}", i, output);

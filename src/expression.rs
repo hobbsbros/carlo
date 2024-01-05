@@ -18,9 +18,6 @@ impl BinaryOperation {
     pub fn simplify(&self, left: &Expression, right: &Expression) -> Expression {
         use Expression::*;
 
-        let left = &left.simplify();
-        let right = &right.simplify();
-
         if let Float {
             value: l_value,
             kg: l_kg,
@@ -136,22 +133,6 @@ pub enum Expression {
     }
 }
 
-impl Expression {
-    /// Simplifies an expression.
-    pub fn simplify(&self) -> Self {
-        use Expression::*;
-
-        match self {
-            BinOp {
-                left,
-                oper,
-                right,
-            } => oper.simplify(left, right),
-            _ => (*self).to_owned(),
-        }
-    }
-}
-
 fn format_unit(
     mut value: f64,
     mut kg: f64,
@@ -201,9 +182,7 @@ impl fmt::Display for Expression {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         use Expression::*;
 
-        let expr = self.simplify();
-
-        let string = match expr {
+        let string = match self {
             Assignment {
                 left: _left,
                 right,
@@ -225,7 +204,7 @@ impl fmt::Display for Expression {
                 k,
                 mol,
             } => {
-                format_unit(value, kg, m , s, a, k, mol)
+                format_unit(*value, *kg, *m, *s, *a, *k, *mol)
             },
             Identifier (s) => {
                 format!("{}", s)
