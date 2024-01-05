@@ -111,7 +111,7 @@ impl CliArgs {
         // Parse argument or input file
         if subcommand == Subcommand::Help && args.len() > 2 && !args[2].starts_with("-") {
             argument = Some (args[2].to_owned());
-        } else if subcommand != Subcommand::Help && args.len() > 2 && !args[2].starts_with("-"_ {
+        } else if subcommand != Subcommand::Help && args.len() > 2 && !args[2].starts_with("-") {
             inputfile = Some (args[2].as_str().into());
         }
 
