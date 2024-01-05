@@ -91,4 +91,16 @@ impl Environment {
 
         output
     }
+
+    /// Evaluates a series of statements in this environment and returns LaTeX.
+    pub fn latex_evaluate(&mut self, expressions: &Vec<Expression>) -> String {
+        let mut output = String::new();
+
+        for expr in expressions {
+            let out = self.simplify(expr);
+            output.push_str(&format!("{}\n", out.latex()));
+        }
+
+        output
+    }
 }

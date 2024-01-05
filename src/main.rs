@@ -151,7 +151,9 @@ fn run(inputfile: Option<PathBuf>, debug: bool) {
 
 fn latex(inputfile: Option<PathBuf>, debug: bool) {
     let expressions = parse(inputfile, debug);
-    println!("{:#?}", expressions);
+    let mut env = Environment::new();
+    let output = env.latex_evaluate(&expressions);
+    println!("{}", output);
 }
 
 fn version() {
