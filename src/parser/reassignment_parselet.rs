@@ -14,11 +14,14 @@ impl InfixParselet for ReassignmentParselet {
     fn parse(&self, tokenstream: &mut Tokenstream, parser: &Parser, left: Expression, token: Token, nesting: usize) -> Expression {
         use Expression::*;
 
-        let right = parser.parse_expr(tokenstream, token.precedence(), nesting + 1);
+        let right = parser.parse_expr(tokenstream, token.precedence() - 1, nesting + 1);
 
         let left = match left {
             Identifier (i) => i,
-            _ => unreachable!(),
+            _ => {
+                println!("{}", left);
+                unreachable!()
+            },
         };
 
         Reassignment {

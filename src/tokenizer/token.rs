@@ -79,15 +79,15 @@ impl From<TokenClass> for u8 {
         match class {
             Let         => 1,
             Identifier  => 0,
-            Assignment  => 1,
+            Assignment  => 2,
             Number      => 0,
             Unknown     => 0,
-            Plus        => 2,
-            Minus       => 2,
-            Times       => 3,
-            Divide      => 3,
-            OpenParen   => 1,
-            CloseParen  => 1,
+            Plus        => 3,
+            Minus       => 3,
+            Times       => 4,
+            Divide      => 4,
+            OpenParen   => 2,
+            CloseParen  => 2,
         }
     }
 }
