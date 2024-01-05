@@ -62,6 +62,12 @@ pub enum TokenClass {
     /// Number
     Number,
 
+    /// Opening parenthesis
+    OpenParen,
+
+    /// Closing parenthesis
+    CloseParen,
+
     /// Unknown
     Unknown,
 }
@@ -80,6 +86,8 @@ impl From<TokenClass> for u8 {
             Minus       => 2,
             Times       => 3,
             Divide      => 3,
+            OpenParen   => 1,
+            CloseParen  => 1,
         }
     }
 }
@@ -97,6 +105,8 @@ impl From<char> for TokenClass {
             '-' => Minus,
             '*' => Times,
             '/' => Divide,
+            '(' => OpenParen,
+            ')' => CloseParen,
             '0'..='9' => Number,
             _ => Unknown,
         }
@@ -108,15 +118,17 @@ impl fmt::Display for TokenClass {
         use TokenClass::*;
 
         let string = match self {
-            Let => "Let",
-            Identifier => "Identifier",
-            Assignment => "Assignment",
-            Number => "Number",
-            Unknown => "Unknown",
-            Plus => "Plus",
-            Minus => "Minus",
-            Times => "Times",
-            Divide => "Divide",
+            Let         => "Let",
+            Identifier  => "Identifier",
+            Assignment  => "Assignment",
+            Number      => "Number",
+            Unknown     => "Unknown",
+            Plus        => "Plus",
+            Minus       => "Minus",
+            Times       => "Times",
+            Divide      => "Divide",
+            OpenParen   => "OpenParen",
+            CloseParen  => "CloseParen",
         };
 
         write!(f, "{}", string)

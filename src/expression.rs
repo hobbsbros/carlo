@@ -2,7 +2,10 @@
 
 use std::fmt;
 
-use crate::UNITS;
+use crate::{
+    Error,
+    UNITS,
+};
 
 #[derive(Clone, Copy, Debug)]
 /// Defines binary operations in Carlo.
@@ -46,10 +49,10 @@ impl BinaryOperation {
                     mol: self.oper_unit(l_mol, r_mol),
                 }
             } else {
-                todo!()
+                Expression::Null
             }
         } else {
-            todo!()
+            Expression::Null
         }
     }
 
@@ -73,7 +76,8 @@ impl BinaryOperation {
             Add | Sub => if left == right {
                 return *left
             } else {
-                todo!()
+                Error::UnmatchedUnits (left, right).warn();
+                return 0.0;
             },
             Mul => left + right,
             Div => left - right,
@@ -130,7 +134,10 @@ pub enum Expression {
         left: Box<Expression>,
         oper: BinaryOperation,
         right: Box<Expression>,
-    }
+    },
+
+    /// Null
+    Null,
 }
 
 fn format_unit(
@@ -184,16 +191,16 @@ impl fmt::Display for Expression {
 
         let string = match self {
             Assignment {
-                left: _left,
+                left,
                 right,
             } => {
-                format!("{}", right)
+                format!("{} = {}", left, right)
             },
             Reassignment {
-                left: _left,
+                left,
                 right,
             } => {
-                format!("{}", right)
+                format!("{} = {}", left, right)
             },
             Float {
                 value,
@@ -216,6 +223,7 @@ impl fmt::Display for Expression {
             } => {
                 format!("{} {} {}", left, oper, right)
             },
+            Null => "Null".to_string(),
         };
 
         write!(f, "{}", string)

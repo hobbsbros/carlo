@@ -52,7 +52,10 @@ fn split_string(input: &str) -> (String, f64) {
     } else {
         match str::parse::<f64>(&numeric) {
             Ok (f) => sign * f,
-            Err (_) => Error::CouldNotParseNumber (&numeric).throw(),
+            Err (_) => {
+                Error::CouldNotParseNumber (&numeric).warn();
+                return (String::new(), 0.0);
+            },
         }
     };
 
@@ -92,7 +95,10 @@ fn parse_unit(mut input: &str) -> (f64, f64, f64, f64, f64, f64, f64) {
         mut mol,
     ) = match units.get(&*alpha) {
         Some (u) => *u,
-        None => Error::CouldNotParseNumber (&input).throw(),
+        None => {
+            Error::CouldNotParseNumber (&input).warn();
+            return (0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+        },
     };
 
     // Correct the multiplier for conversions (e.g. kg <-> g)
@@ -149,17 +155,22 @@ impl PrefixParselet for NumberParselet {
             }
         }
 
-        match str::parse::<f64>(&token.value) {
-            Ok (f) => Float {
-                value: multiplier * sign * f,
-                kg: kilogram,
-                m: meter,
-                s: second,
-                a: amp,
-                k: kelvin,
-                mol: mole,
+        let value = match str::parse::<f64>(&token.value) {
+            Ok (f) => f,
+            _ => {
+                Error::CouldNotParseNumber (&token.value).warn();
+                0.0
             },
-            _ => Error::CouldNotParseNumber (&token.value).throw(),
+        };
+
+        Float {
+            value: multiplier * sign * value,
+            kg: kilogram,
+            m: meter,
+            s: second,
+            a: amp,
+            k: kelvin,
+            mol: mole,
         }
     }
 }

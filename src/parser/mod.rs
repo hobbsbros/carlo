@@ -89,7 +89,10 @@ impl Parser {
 
         let prefix_parselet = match self.prefix_parselets.get(&token.class) {
             Some (p) => p,
-            None => Error::CouldNotParse (&token.value).throw(),
+            None => {
+                Error::CouldNotParse (&token.value).warn();
+                return Expression::Null;
+            },
         };
 
         let mut expression = prefix_parselet.parse(

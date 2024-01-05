@@ -138,7 +138,9 @@ fn repl(debug: bool) {
 
 fn run(inputfile: Option<PathBuf>, debug: bool) {
     let expressions = parse(inputfile, debug);
-    println!("{:#?}", expressions);
+    let mut env = Environment::new();
+    let output = env.evaluate(&expressions);
+    println!("{}", output);
 }
 
 fn latex(inputfile: Option<PathBuf>, debug: bool) {

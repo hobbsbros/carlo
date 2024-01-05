@@ -2,7 +2,10 @@
 
 use std::collections::HashMap;
 
-use crate::Expression;
+use crate::{
+    Error,
+    Expression,
+};
 
 pub struct Environment {
     variables: HashMap<String, Expression>,
@@ -25,7 +28,10 @@ impl Environment {
     fn lookup(&self, name: &String) -> Expression {
         match self.variables.get(name) {
             Some (expr) => expr.to_owned(),
-            None => todo!(),
+            None => {
+                Error::UndeclaredVariable (name).warn();
+                Expression::Null
+            },
         }
     }
 
@@ -38,16 +44,18 @@ impl Environment {
                 left,
                 right,
             } => {
-                self.register(&left, &right);
-                *right.to_owned()
+                let sr = self.simplify(right);
+                self.register(&left, &sr);
+                sr.to_owned()
             },
             Reassignment {
                 left,
                 right,
             } => {
                 let _ = self.lookup(&left);
-                self.register(&left, &right);
-                *right.to_owned()
+                let sr = self.simplify(right);
+                self.register(&left, &sr);
+                sr.to_owned()
             },
             Float {
                 value: _,
@@ -68,6 +76,7 @@ impl Environment {
                 let sr = self.simplify(right);
                 oper.simplify(&sl, &sr)
             },
+            Null => Null,
         }
     }
 

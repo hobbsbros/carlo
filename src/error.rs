@@ -50,6 +50,12 @@ pub enum Error<T: fmt::Display> {
 
     /// Could not flush stdout
     CouldNotFlushStdout (T),
+
+    /// Undeclared variable
+    UndeclaredVariable (T),
+
+    /// Unmatched units
+    UnmatchedUnits (T, T),
 }
 
 /// Converts an error into a string.
@@ -72,6 +78,8 @@ impl<T: fmt::Display> fmt::Display for Error<T> {
             NoHelpAvailable (s) => format!("No help available for subcommand: {}", s),
             CouldNotReadLine (i) => format!("Could not read user input near In[{}]", i),
             CouldNotFlushStdout (i) => format!("Could not flust stdout near In[{}]", i),
+            UndeclaredVariable (s) => format!("Found undeclared variable: {}", s),
+            UnmatchedUnits (l, r) => format!("Unmatched unit powers ({}) and ({})", l, r),
         };
 
         write!(f, "{}", string)
@@ -82,5 +90,9 @@ impl<T: fmt::Display> Error<T> {
     pub fn throw(&self) -> ! {
         println!("{} {}", "(error)".truecolor(255, 60, 40).bold(), self);
         exit(0);
+    }
+
+    pub fn warn(&self) {
+        println!("{} {}\n", "(warn)".truecolor(252, 115, 3).bold(), self);
     }
 }
