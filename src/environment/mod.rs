@@ -118,7 +118,11 @@ impl Environment {
                 let sr = self.simplify(right, false, false);
                 
                 self.register(&left, &sr);
-                expr.to_owned()
+                
+                Assignment {
+                    left: left.to_owned(),
+                    right: Box::new(sr.to_owned()),
+                }
             },
             Reassignment {
                 left,
@@ -137,7 +141,11 @@ impl Environment {
                 let sr = self.simplify(right, false, false);
                 
                 self.register(&left, &sr);
-                expr.to_owned()
+                
+                Reassignment {
+                    left: left.to_owned(),
+                    right: Box::new(sr.to_owned()),
+                }
             },
             Float {
                 value: _,

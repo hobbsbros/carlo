@@ -40,6 +40,7 @@ pub fn latex(inputfile: Option<PathBuf>, debug: bool) {
         "\\author{{{}}}\n",
         author,
     ));
+    output.push_str("\\maketitle\n");
 
     // Parse and evaluate code
     let expressions = parse(inputfile, debug);
