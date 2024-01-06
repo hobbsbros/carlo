@@ -7,6 +7,8 @@ use std::{
 
 use colored::*;
 
+use rustyline::DefaultEditor;
+
 use carlotk::{
     CliArgs,
     Environment,
@@ -109,24 +111,41 @@ fn repl(inputfile: Option<PathBuf>, debug: bool) {
     println!("Developed by Hobbs Bros.");
     println!();
 
+    // Initialize parser
     let parser = Parser::new(debug);
+
+    // Begin environment
     let mut env = Environment::new();
 
-    // Import
+    // Import file
+    if let Some(i) = &inputfile {
+        println!("Importing {}", i.display());
+        println!();
+    }
     let imported = parse(inputfile, debug);
 
+    // Evaluated imported file
     env.evaluate(&imported);
+
+    // Begin REPL
+    let mut rl = DefaultEditor::new().unwrap();
 
     loop {
         // Prompt user
-        let buffer = read(&format!(
+        let readline = match rl.readline(&format!(
             "In[{}]  >> ",
             i,
-        ));
+        )) {
+            Ok (r) => {
+                let _ = rl.add_history_entry(r.as_str());
+                r
+            },
+            Err (_) => Error::CouldNotReadLine (i).throw(),
+        };
         println!();
 
         // Parse input
-        let expr = parser.parse(&buffer);
+        let expr = parser.parse(&readline);
         
         // Evaluate input
         let output = env.evaluate(&expr);
