@@ -6,6 +6,7 @@ mod environment;
 mod error;
 mod expression;
 mod parser;
+pub mod subcommands;
 mod tokenizer;
 mod unit;
 
@@ -27,7 +28,6 @@ pub use binary_operation::BinaryOperation;
 pub use cli::{
     CliArgs,
     Flag,
-    Subcommand,
 };
 
 pub use environment::Environment;
@@ -44,10 +44,45 @@ pub use tokenizer::{
 
 pub use parser::Parser;
 
+pub use subcommands::Subcommand;
+
 pub use unit::{
     PREFIXES,
     UNITS,
 };
+
+pub const VERSION: &str = "0.7.1";
+
+pub const HELP: [(&str, &str); 6] = [
+    ("", include_str!("./help.txt")),
+    ("repl", include_str!("./subcommands/help_repl.txt")),
+    ("run", include_str!("./subcommands/help_run.txt")),
+    ("latex", include_str!("./subcommands/help_latex.txt")),
+    ("help", include_str!("./subcommands/help_help.txt")),
+    ("version", include_str!("./subcommands/help_version.txt")),
+];
+
+/// Prelude
+pub mod prelude {
+    pub use std::{
+        collections::HashMap,
+        path::PathBuf,
+    };
+
+    pub use colored::*;
+
+    pub use rustyline::DefaultEditor;
+
+    pub use crate::{
+        Environment,
+        Error,
+        HELP,
+        read,
+        parse,
+        Parser,
+        VERSION,
+    };
+}
 
 /// Converts a source file into a list of expressions.
 pub fn parse(inputfile: Option<PathBuf>, debug: bool) -> Vec<Expression> {

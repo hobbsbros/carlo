@@ -187,7 +187,12 @@ impl Environment {
 
         for expr in expressions {
             let out = self.simplify(expr, true, true);
-            output.push_str(&format!("{}\n", out));
+
+            if let Expression::Null = expr {
+                // Do not print Null
+            } else {
+                output.push_str(&format!("{}\n", out));
+            }
         }
 
         output

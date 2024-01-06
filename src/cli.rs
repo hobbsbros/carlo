@@ -5,42 +5,10 @@ use std::{
     path::PathBuf,
 };
 
-use crate::Error;
-
-#[derive(Clone, Copy, PartialEq, Eq)]
-/// Subcommands for the Carlo language executable.
-pub enum Subcommand {
-    /// Executes a REPL
-    Repl,
-
-    /// Executes a source file
-    Run,
-
-    /// Converts a source file into LaTeX
-    Latex,
-
-    /// Displays a help menu
-    Help,
-
-    /// Displays the version
-    Version,
-}
-
-/// Converts a string into a subcommand.
-impl From<&str> for Subcommand {
-    fn from(input: &str) -> Self {
-        use Subcommand::*;
-
-        match input {
-            "repl" => Repl,
-            "run" => Run,
-            "latex" => Latex,
-            "help" => Help,
-            "version" => Version,
-            _ => Error::UnrecognizedSubcommand (input).throw(),
-        }
-    }
-}
+use crate::{
+    Error,
+    Subcommand,
+};
 
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 /// Flags for the Carlo language executable.
@@ -98,15 +66,15 @@ impl CliArgs {
     pub fn parse() -> Self {
         let args = args().collect::<Vec<String>>();
 
+        let mut argument: Option<String> = None;
+        let mut inputfile: Option<PathBuf> = None;
+
         // Parse subcommand
         let subcommand = if args.len() > 1 {
             args[1].as_str().into()
         } else {
             Subcommand::Repl
         };
-
-        let mut argument: Option<String> = None;
-        let mut inputfile: Option<PathBuf> = None;
 
         // Parse argument or input file
         if subcommand == Subcommand::Help && args.len() > 2 && !args[2].starts_with("-") {
