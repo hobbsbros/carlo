@@ -54,17 +54,15 @@ impl Expression {
     pub fn latex(&self, toplevel: bool) -> String {
         use Expression::*;
 
-        println!("{} {}", self, toplevel);
-
         let string = match self {
             Assignment {
                 left,
                 right,
-            } => format!("{} := {}", left, right.latex(true)),
+            } => format!("{} := {}", latex_identifier(left), right.latex(true)),
             Reassignment {
                 left,
                 right,
-            } => format!("{} = {}", left, right.latex(true)),
+            } => format!("{} = {}", latex_identifier(left), right.latex(true)),
             Float {
                 value,
                 kg,
@@ -74,7 +72,7 @@ impl Expression {
                 k,
                 mol,
             } => latex_unit(*value, *kg, *m, *s, *a, *k, *mol),
-            Identifier (s) => format!("{}", s),
+            Identifier (s) => latex_identifier(s),
             Symbolic (s) => format!("{}", s),
             BinOp {
                 left,
@@ -216,4 +214,22 @@ impl fmt::Display for Expression {
 
         write!(f, "{}", string)
     }
+}
+
+/// Converts an identifier to LaTeX.
+fn latex_identifier(id: &str) -> String {
+    let mut output = String::new();
+
+    for (i, part) in id.split("_").enumerate() {
+        if i == 0 {
+            output.push_str(part);
+        } else {
+            output.push_str(&format!(
+                "_{{{}}}",
+                part
+            ))
+        }
+    }
+
+    output
 }

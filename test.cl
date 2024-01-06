@@ -1,5 +1,5 @@
 # Im a comment
-let x = 3 kg m s_2 + 6 kg m s_2
+let x_cm = 3 kg m s_2 + 6 kg m s_2
 
 let F = m * a
 
