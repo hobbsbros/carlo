@@ -54,10 +54,16 @@ impl Charstream {
 
         let mut value = String::new();
 
+        let mut comment = false;
+
         while let Some (c) = self.peek() {
-            if TOKENBREAK.contains(&c) {
+            if TOKENBREAK.contains(&c) && !comment {
                 self.next();
                 break;
+            }
+
+            if c == '\n' {
+                comment = false;
             }
 
             if ('A'..='Z').contains(&c) && class == Identifier {
@@ -87,6 +93,11 @@ impl Charstream {
             } else if c == '\n' && class == Newline {
                 value.push(c);
             } else if (('0'..='9').contains(&c) || c == '.' || c == 'e' || c == '+' || c == '-') && class == Number {
+                value.push(c);
+            } else if c == '#' && class == Comment {
+                comment = true;
+                value.push(c);
+            } else if comment {
                 value.push(c);
             } else {
                 break;

@@ -92,7 +92,7 @@ impl Parser {
         
         let token = tokenstream.next_unwrap();
 
-        if token.check(Newline) {
+        if token.check(Newline) || token.check(Comment) {
             return Expression::Null;
         }
 

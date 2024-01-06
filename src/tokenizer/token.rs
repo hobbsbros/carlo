@@ -74,6 +74,9 @@ pub enum TokenClass {
     /// Newline
     Newline,
 
+    /// Comment
+    Comment,
+
     /// Unknown
     Unknown,
 }
@@ -96,6 +99,7 @@ impl From<TokenClass> for u8 {
             OpenParen   => 2,
             CloseParen  => 2,
             Newline     => 0,
+            Comment     => 0,
         }
     }
 }
@@ -118,6 +122,7 @@ impl From<char> for TokenClass {
             ')' => CloseParen,
             '0'..='9' => Number,
             '\n' => Newline,
+            '#' => Comment,
             _ => Unknown,
         }
     }
@@ -141,6 +146,7 @@ impl fmt::Display for TokenClass {
             Newline     => "Newline",
             OpenParen   => "OpenParen",
             CloseParen  => "CloseParen",
+            Comment     => "Comment",
         };
 
         write!(f, "{}", string)
