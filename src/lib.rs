@@ -1,5 +1,6 @@
 //! Main library for the Carlo language.
 
+mod binary_operation;
 mod cli;
 mod environment;
 mod error;
@@ -21,6 +22,8 @@ use std::{
 
 use colored::*;
 
+pub use binary_operation::BinaryOperation;
+
 pub use cli::{
     CliArgs,
     Flag,
@@ -31,10 +34,7 @@ pub use environment::Environment;
 
 pub use error::Error;
 
-pub use expression::{
-    BinaryOperation,
-    Expression,
-};
+pub use expression::Expression;
 
 pub use tokenizer::{
     Token,

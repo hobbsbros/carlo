@@ -71,6 +71,9 @@ pub enum TokenClass {
     /// Closing parenthesis
     CloseParen,
 
+    /// Newline
+    Newline,
+
     /// Unknown
     Unknown,
 }
@@ -92,6 +95,7 @@ impl From<TokenClass> for u8 {
             Symbolic    => 1,
             OpenParen   => 2,
             CloseParen  => 2,
+            Newline     => 0,
         }
     }
 }
@@ -113,6 +117,7 @@ impl From<char> for TokenClass {
             '(' => OpenParen,
             ')' => CloseParen,
             '0'..='9' => Number,
+            '\n' => Newline,
             _ => Unknown,
         }
     }
@@ -133,6 +138,7 @@ impl fmt::Display for TokenClass {
             Times       => "Times",
             Divide      => "Divide",
             Symbolic    => "Symbolic",
+            Newline     => "Newline",
             OpenParen   => "OpenParen",
             CloseParen  => "CloseParen",
         };

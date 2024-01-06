@@ -16,7 +16,7 @@ pub struct Charstream {
 }
 
 /// Specifies characters used to break tokens.
-const TOKENBREAK: [char; 3] = [' ', '\n', ';'];
+const TOKENBREAK: [char; 2] = [' ', ';'];
 
 /// Specifies whitespace characters.
 const WHITESPACE: [char; 3] = [' ', '\t', '\n'];
@@ -83,6 +83,8 @@ impl Charstream {
             } else if c == ')' && class == CloseParen {
                 value.push(c);
             } else if c == '!' && class == Symbolic {
+                value.push(c);
+            } else if c == '\n' && class == Newline {
                 value.push(c);
             } else if (('0'..='9').contains(&c) || c == '.' || c == 'e' || c == '+' || c == '-') && class == Number {
                 value.push(c);

@@ -87,23 +87,22 @@ impl Parser {
     }
 
     /// Parses an expression.
-    fn parse_expr(&self, tokenstream: &mut Tokenstream, precedence: u8, nesting: usize) -> Expression {
+    fn parse_expr(&self, tokenstream: &mut Tokenstream, precedence: u8, nesting: usize) -> Expression {       
+        use TokenClass::*;
+        
         let token = tokenstream.next_unwrap();
+
+        if token.check(Newline) {
+            return Expression::Null;
+        }
 
         let prefix_parselet = match self.prefix_parselets.get(&token.class) {
             Some (p) => p,
             None => {
-                Error::CouldNotParse (&token.value).warn();
+                Error::CouldNotParse (&token.value.replace("\n", "newline")).warn();
                 return Expression::Null;
             },
         };
-
-        let mut expression = prefix_parselet.parse(
-            tokenstream,
-            self,
-            token,
-            nesting,
-        );
 
         // Indent debug statements
         let mut indent = String::new();
@@ -112,10 +111,19 @@ impl Parser {
         }
 
         if self.debug {
+            println!("{}Current token: {}", indent, &token);
+            println!();
             println!("{}Parsing precedence: {}", indent, precedence);
             println!("{}Tokenstream precedence: {}", indent, tokenstream.precedence());
             println!();
         }
+
+        let mut expression = prefix_parselet.parse(
+            tokenstream,
+            self,
+            token,
+            nesting,
+        );
 
         while precedence < tokenstream.precedence() {
             let token = match tokenstream.peek() {

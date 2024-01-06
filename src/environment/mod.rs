@@ -105,6 +105,82 @@ impl Environment {
         }
     }
 
+    /// Simplifies an expression in this environment for a LaTeX document.
+    fn simplify_latex(&mut self, expr: &Expression, toplevel: bool, resolve_names: bool) -> Expression {
+        use Expression::*;
+
+        match expr {
+            Assignment {
+                left,
+                right,
+            } => {
+                // Simplify the RHS
+                let sr = self.simplify(right, false, false);
+                
+                self.register(&left, &sr);
+                expr.to_owned()
+            },
+            Reassignment {
+                left,
+                right,
+            } => {
+                // Make sure this variable exists
+                match self.lookup(&left) {
+                    Some (_) => (),
+                    None => {
+                        Error::UndeclaredVariable (&left).warn();
+                        return Null;
+                    },
+                };
+
+                // Simplify the RHS
+                let sr = self.simplify(right, false, false);
+                
+                self.register(&left, &sr);
+                expr.to_owned()
+            },
+            Float {
+                value: _,
+                kg: _,
+                m: _,
+                s: _,
+                a: _,
+                k: _,
+                mol: _,
+            } => expr.to_owned(),
+            Identifier (s) => if resolve_names {
+                match self.lookup(&s) {
+                    Some (e) => self.simplify(&e, false, true),
+                    None => if toplevel {
+                        Error::UndeclaredVariable (&s).warn();
+                        Null
+                    } else {
+                        expr.to_owned()
+                    },
+                }
+            } else {
+                expr.to_owned()
+            },
+            Symbolic (s) => match self.lookup(&s) {
+                Some (e) => self.simplify(&e, false, false),
+                None => {
+                    Error::UndeclaredVariable (&s).warn();
+                    Null
+                },
+            },
+            BinOp {
+                left,
+                oper,
+                right,
+            } => {
+                let sl = self.simplify(left, false, resolve_names);
+                let sr = self.simplify(right, false, resolve_names);
+                oper.simplify(&sl, &sr)
+            },
+            Null => Null,
+        }
+    }
+
     /// Evaluates a series of statements in this environment.
     pub fn evaluate(&mut self, expressions: &Vec<Expression>) -> String {
         let mut output = String::new();
@@ -122,7 +198,7 @@ impl Environment {
         let mut output = String::new();
 
         for expr in expressions {
-            let out = self.simplify(expr, true, true);
+            let out = self.simplify_latex(expr, true, true);
             output.push_str(&format!("{}\n", out.latex()));
         }
 

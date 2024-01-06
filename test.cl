@@ -1,1 +1,2 @@
-let x = 3 kg m s_2 + 6 kg m s_2
+let m = 3
+
