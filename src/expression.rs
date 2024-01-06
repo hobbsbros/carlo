@@ -1,11 +1,19 @@
 //! Defines Carlo language expressions.
 
-use std::fmt;
+use std::{
+    collections::HashMap,
+    fmt,
+};
 
 use crate::{
     BinaryOperation,
     UNITS,
 };
+
+/// LaTeX special identifiers
+const SPECIAL_IDENTIFIERS: [(&str, &str); 1] = [
+    ("pi", r#"\pi"#),
+];
 
 #[derive(Clone, Debug)]
 /// Enumerates the expression available to the Carlo parser.
@@ -46,6 +54,9 @@ pub enum Expression {
         right: Box<Expression>,
     },
 
+    /// Header
+    Header (String),
+
     /// Null
     Null,
 }
@@ -83,6 +94,7 @@ impl Expression {
             } else {
                 format!("({}{}{})", left.latex(false), oper.latex(), right.latex(false))
             },
+            Header (s) => format!("\n\\section{{{}}}\n", s),
             Null => String::new(),
         };
 
@@ -209,6 +221,7 @@ impl fmt::Display for Expression {
                 oper,
                 right,
             } => format!("({} {} {})", left, oper, right),
+            Header (s) => format!("\n{}\n", s.to_uppercase()),
             Null => "Null".to_string(),
         };
 
@@ -220,7 +233,14 @@ impl fmt::Display for Expression {
 fn latex_identifier(id: &str) -> String {
     let mut output = String::new();
 
+    let special = HashMap::from(SPECIAL_IDENTIFIERS);
+
     for (i, part) in id.split("_").enumerate() {
+        let part = match special.get(&part) {
+            Some (p) => p,
+            None => part,
+        };
+
         if i == 0 {
             output.push_str(part);
         } else {

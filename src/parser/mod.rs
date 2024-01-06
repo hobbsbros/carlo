@@ -9,6 +9,7 @@ mod identifier_parselet;
 mod assignment_parselet;
 mod symbolic_parselet;
 mod parenthesis_parselet;
+mod header_parselet;
 
 // Infix parselets
 mod reassignment_parselet;
@@ -35,6 +36,7 @@ use identifier_parselet::IdentifierParselet;
 use assignment_parselet::AssignmentParselet;
 use symbolic_parselet::SymbolicParselet;
 use parenthesis_parselet::ParenthesisParselet;
+use header_parselet::HeaderParselet;
 
 use reassignment_parselet::ReassignmentParselet;
 use binary_operation_parselet::BinaryOperationParselet;
@@ -61,6 +63,7 @@ impl Parser {
         prefix_parselets.insert(Symbolic, Box::new(SymbolicParselet {}));
         prefix_parselets.insert(Let, Box::new(AssignmentParselet {}));
         prefix_parselets.insert(OpenParen, Box::new(ParenthesisParselet {}));
+        prefix_parselets.insert(Header, Box::new(HeaderParselet {}));
 
         // Declarative grammar: infix parselet
         infix_parselets.insert(Assignment, Box::new(ReassignmentParselet {}));

@@ -101,6 +101,7 @@ impl Environment {
                 let sr = self.simplify(right, false, resolve_names);
                 oper.simplify(&sl, &sr)
             },
+            Header (_) => expr.to_owned(),
             Null => Null,
         }
     }
@@ -194,6 +195,7 @@ impl Environment {
                 let sr = self.simplify(right, false, resolve_names);
                 oper.simplify(&sl, &sr)
             },
+            Header (_) => expr.to_owned(),
             Null => Null,
         }
     }
@@ -225,7 +227,12 @@ impl Environment {
             if let Expression::Null = expr {
                 // Do not print Null
             } else {
-                output.push_str(&format!("$$\n{}\n$$\n", out.latex(true)));
+                let latex = out.latex(true);
+                if !latex.starts_with("\n\\section") {
+                    output.push_str(&format!("$$\n{}\n$$\n", out.latex(true)));
+                } else {
+                    output.push_str(&format!("\n{}\n\n", out.latex(true)));
+                }
             }
         }
 

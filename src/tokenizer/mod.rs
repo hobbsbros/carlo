@@ -55,15 +55,17 @@ impl Charstream {
         let mut value = String::new();
 
         let mut comment = false;
+        let mut header = false;
 
         while let Some (c) = self.peek() {
-            if TOKENBREAK.contains(&c) && !comment {
+            if TOKENBREAK.contains(&c) && !comment && !header {
                 self.next();
                 break;
             }
 
             if c == '\n' {
                 comment = false;
+                header = false;
             }
 
             if ('A'..='Z').contains(&c) && class == Identifier {
@@ -90,6 +92,8 @@ impl Charstream {
                 value.push(c);
             } else if c == '!' && class == Symbolic {
                 value.push(c);
+            } else if c == '@' && class == Header {
+                header = true;
             } else if c == '\n' && class == Newline {
                 value.push(c);
             } else if (('0'..='9').contains(&c) || c == '.' || c == 'e' || c == '+' || c == '-') && class == Number {
@@ -97,7 +101,7 @@ impl Charstream {
             } else if c == '#' && class == Comment {
                 comment = true;
                 value.push(c);
-            } else if comment {
+            } else if comment | header {
                 value.push(c);
             } else {
                 break;
