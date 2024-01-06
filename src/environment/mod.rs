@@ -158,7 +158,16 @@ impl Environment {
             } => expr.to_owned(),
             Identifier (s) => if resolve_names {
                 match self.lookup(&s) {
-                    Some (e) => self.simplify(&e, false, true),
+                    Some (e) => if toplevel {
+                        let sr = self.simplify(&e, false, true);
+
+                        Reassignment {
+                            left: s.to_owned(),
+                            right: Box::new(sr),
+                        }
+                    } else {
+                        self.simplify(&e, false, true)
+                    },
                     None => if toplevel {
                         Error::UndeclaredVariable (&s).warn();
                         Null
@@ -216,7 +225,7 @@ impl Environment {
             if let Expression::Null = expr {
                 // Do not print Null
             } else {
-                output.push_str(&format!("$$\n{}\n$$\n", out.latex()));
+                output.push_str(&format!("$$\n{}\n$$\n", out.latex(true)));
             }
         }
 

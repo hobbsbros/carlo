@@ -8,3 +8,5 @@ let m = 3 kg
 let a = 9.81 m s_2
 
 m = 4 kg
+
+F

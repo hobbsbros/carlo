@@ -51,22 +51,20 @@ pub enum Expression {
 }
 
 impl Expression {
-    pub fn latex(&self) -> String {
+    pub fn latex(&self, toplevel: bool) -> String {
         use Expression::*;
+
+        println!("{} {}", self, toplevel);
 
         let string = match self {
             Assignment {
                 left,
                 right,
-            } => {
-                format!("{} = {}", left, right.latex())
-            },
+            } => format!("{} := {}", left, right.latex(true)),
             Reassignment {
                 left,
                 right,
-            } => {
-                format!("{} = {}", left, right.latex())
-            },
+            } => format!("{} = {}", left, right.latex(true)),
             Float {
                 value,
                 kg,
@@ -75,21 +73,17 @@ impl Expression {
                 a,
                 k,
                 mol,
-            } => {
-                latex_unit(*value, *kg, *m, *s, *a, *k, *mol)
-            },
-            Identifier (s) => {
-                format!("{}", s)
-            },
-            Symbolic (s) => {
-                format!("{}", s)
-            },
+            } => latex_unit(*value, *kg, *m, *s, *a, *k, *mol),
+            Identifier (s) => format!("{}", s),
+            Symbolic (s) => format!("{}", s),
             BinOp {
                 left,
                 oper,
                 right,
-            } => {
-                format!("{}{}{}", left.latex(), oper.latex(), right.latex())
+            } => if toplevel {
+                format!("{}{}{}", left.latex(false), oper.latex(), right.latex(false))
+            } else {
+                format!("({}{}{})", left.latex(false), oper.latex(), right.latex(false))
             },
             Null => String::new(),
         };
@@ -196,15 +190,11 @@ impl fmt::Display for Expression {
             Assignment {
                 left,
                 right,
-            } => {
-                format!("{} = {}", left, right)
-            },
+            } => format!("{} = {}", left, right),
             Reassignment {
                 left,
                 right,
-            } => {
-                format!("{} = {}", left, right)
-            },
+            } => format!("{} = {}", left, right),
             Float {
                 value,
                 kg,
@@ -213,22 +203,14 @@ impl fmt::Display for Expression {
                 a,
                 k,
                 mol,
-            } => {
-                format_unit(*value, *kg, *m, *s, *a, *k, *mol)
-            },
-            Identifier (s) => {
-                format!("{}", s)
-            },
-            Symbolic (s) => {
-                format!("{}", s)
-            },
+            } => format_unit(*value, *kg, *m, *s, *a, *k, *mol),
+            Identifier (s) => format!("{}", s),
+            Symbolic (s) => format!("{}", s),
             BinOp {
                 left,
                 oper,
                 right,
-            } => {
-                format!("{} {} {}", left, oper, right)
-            },
+            } => format!("({} {} {})", left, oper, right),
             Null => "Null".to_string(),
         };
 

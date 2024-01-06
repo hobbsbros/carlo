@@ -198,7 +198,13 @@ impl Tokenstream {
 
         match next {
             Some (t) => t,
-            None => Error::UnexpectedEOF (&last).throw(),
+            None => {
+                Error::UnexpectedEOF (&last).warn();
+                Token {
+                    class: TokenClass::Unknown,
+                    value: String::new(),
+                }
+            },
         }
     }
 
