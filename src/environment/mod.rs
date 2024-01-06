@@ -30,7 +30,7 @@ impl Environment {
     }
 
     /// Simplifies an expression in this environment.
-    fn simplify(&mut self, expr: &Expression, resolve_names: bool) -> Expression {
+    fn simplify(&mut self, expr: &Expression, toplevel: bool, resolve_names: bool) -> Expression {
         use Expression::*;
 
         match expr {
@@ -38,7 +38,9 @@ impl Environment {
                 left,
                 right,
             } => {
-                let sr = self.simplify(right, false);
+                // Simplify the RHS
+                let sr = self.simplify(right, false, false);
+                
                 self.register(&left, &sr);
                 sr.to_owned()
             },
@@ -46,6 +48,7 @@ impl Environment {
                 left,
                 right,
             } => {
+                // Make sure this variable exists
                 match self.lookup(&left) {
                     Some (_) => (),
                     None => {
@@ -53,7 +56,10 @@ impl Environment {
                         return Null;
                     },
                 };
-                let sr = self.simplify(right, false);
+
+                // Simplify the RHS
+                let sr = self.simplify(right, false, false);
+                
                 self.register(&left, &sr);
                 sr.to_owned()
             },
@@ -68,19 +74,31 @@ impl Environment {
             } => expr.to_owned(),
             Identifier (s) => if resolve_names {
                 match self.lookup(&s) {
-                    Some (e) => self.simplify(&e, true),
-                    None => expr.to_owned(),
+                    Some (e) => self.simplify(&e, false, true),
+                    None => if toplevel {
+                        Error::UndeclaredVariable (&s).warn();
+                        Null
+                    } else {
+                        expr.to_owned()
+                    },
                 }
             } else {
                 expr.to_owned()
+            },
+            Symbolic (s) => match self.lookup(&s) {
+                Some (e) => self.simplify(&e, false, false),
+                None => {
+                    Error::UndeclaredVariable (&s).warn();
+                    Null
+                },
             },
             BinOp {
                 left,
                 oper,
                 right,
             } => {
-                let sl = self.simplify(left, resolve_names);
-                let sr = self.simplify(right, resolve_names);
+                let sl = self.simplify(left, false, resolve_names);
+                let sr = self.simplify(right, false, resolve_names);
                 oper.simplify(&sl, &sr)
             },
             Null => Null,
@@ -92,7 +110,7 @@ impl Environment {
         let mut output = String::new();
 
         for expr in expressions {
-            let out = self.simplify(expr, true);
+            let out = self.simplify(expr, true, true);
             output.push_str(&format!("{}\n", out));
         }
 
@@ -104,7 +122,7 @@ impl Environment {
         let mut output = String::new();
 
         for expr in expressions {
-            let out = self.simplify(expr, true);
+            let out = self.simplify(expr, true, true);
             output.push_str(&format!("{}\n", out.latex()));
         }
 

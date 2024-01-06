@@ -62,6 +62,9 @@ pub enum TokenClass {
     /// Number
     Number,
 
+    /// Symbolic
+    Symbolic,
+
     /// Opening parenthesis
     OpenParen,
 
@@ -86,6 +89,7 @@ impl From<TokenClass> for u8 {
             Minus       => 3,
             Times       => 4,
             Divide      => 4,
+            Symbolic    => 1,
             OpenParen   => 2,
             CloseParen  => 2,
         }
@@ -105,6 +109,7 @@ impl From<char> for TokenClass {
             '-' => Minus,
             '*' => Times,
             '/' => Divide,
+            '!' => Symbolic,
             '(' => OpenParen,
             ')' => CloseParen,
             '0'..='9' => Number,
@@ -127,6 +132,7 @@ impl fmt::Display for TokenClass {
             Minus       => "Minus",
             Times       => "Times",
             Divide      => "Divide",
+            Symbolic    => "Symbolic",
             OpenParen   => "OpenParen",
             CloseParen  => "CloseParen",
         };

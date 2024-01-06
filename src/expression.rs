@@ -139,6 +139,9 @@ pub enum Expression {
     /// Identifier
     Identifier (String),
 
+    /// Symbolic identifier
+    Symbolic (String),
+
     /// Binary operation
     BinOp {
         left: Box<Expression>,
@@ -179,6 +182,9 @@ impl Expression {
                 latex_unit(*value, *kg, *m, *s, *a, *k, *mol)
             },
             Identifier (s) => {
+                format!("{}", s)
+            },
+            Symbolic (s) => {
                 format!("{}", s)
             },
             BinOp {
@@ -314,6 +320,9 @@ impl fmt::Display for Expression {
                 format_unit(*value, *kg, *m, *s, *a, *k, *mol)
             },
             Identifier (s) => {
+                format!("{}", s)
+            },
+            Symbolic (s) => {
                 format!("{}", s)
             },
             BinOp {

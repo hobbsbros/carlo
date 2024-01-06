@@ -82,6 +82,8 @@ impl Charstream {
                 value.push(c);
             } else if c == ')' && class == CloseParen {
                 value.push(c);
+            } else if c == '!' && class == Symbolic {
+                value.push(c);
             } else if (('0'..='9').contains(&c) || c == '.' || c == 'e' || c == '+' || c == '-') && class == Number {
                 value.push(c);
             } else {
