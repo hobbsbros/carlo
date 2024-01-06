@@ -66,6 +66,7 @@ pub const HELP: [(&str, &str); 6] = [
 pub mod prelude {
     pub use std::{
         collections::HashMap,
+        fs,
         path::PathBuf,
     };
 

@@ -204,7 +204,12 @@ impl Environment {
 
         for expr in expressions {
             let out = self.simplify_latex(expr, true, true);
-            output.push_str(&format!("{}\n", out.latex()));
+
+            if let Expression::Null = expr {
+                // Do not print Null
+            } else {
+                output.push_str(&format!("$$\n{}\n$$\n", out.latex()));
+            }
         }
 
         output
