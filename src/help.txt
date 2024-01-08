@@ -1,4 +1,5 @@
 USAGE
+    carlo
     carlo [subcommand]
     carlo [subcommand] [input file]
     carlo [subcommand] [input file] [flags]
@@ -6,6 +7,7 @@ USAGE
 
 SUBCOMMANDS
     help        display this help menu
+    repl        opens an interpreter REPL
     run         executes an input file
     latex       converts an input file into LaTeX
     version     displays the current version of Carlo
