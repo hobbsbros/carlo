@@ -27,8 +27,8 @@ pub fn latex(inputfile: Option<PathBuf>, debug: bool) {
     let mut output = String::new();
 
     let mut outputfile = match inputfile.clone() {
-        Ok (f) => f,
-        _ => Error::CouldNotFindFile (&strf).throw(),
+        Some (f) => f,
+        _ => Error::NoInputFile::<&str>.throw(),
     };
 
     // Output header
