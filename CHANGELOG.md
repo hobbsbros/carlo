@@ -1,5 +1,10 @@
 # Change Log
 
+## v0.9.0 (released January 10, 2024)
+
+- Fixed bug in numeric rounding
+- Added support for full & partial symbolic evaluation
+
 ## v0.8.0 (released January 6, 2024)
 
 - Added LaTeX headers
