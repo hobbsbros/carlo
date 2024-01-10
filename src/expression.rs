@@ -55,6 +55,9 @@ pub enum Expression {
     /// Symbolic identifier
     Symbolic (String),
 
+    /// Full-resolution symbolic identifier
+    FullSymbolic (String),
+
     /// Binary operation
     BinOp {
         left: Box<Expression>,
@@ -108,6 +111,7 @@ impl Expression {
             } => latex_unit(*value, *kg, *m, *s, *a, *k, *mol),
             Identifier (s) => latex_identifier(s),
             Symbolic (s) => format!("{}", s),
+            FullSymbolic (s) => format!("{}", s),
             BinOp {
                 left,
                 oper,
@@ -239,6 +243,7 @@ impl fmt::Display for Expression {
             } => format_unit(*value, *kg, *m, *s, *a, *k, *mol),
             Identifier (s) => format!("{}", s),
             Symbolic (s) => format!("{}", s),
+            FullSymbolic (s) => format!("{}", s),
             BinOp {
                 left,
                 oper,

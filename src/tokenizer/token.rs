@@ -65,6 +65,9 @@ pub enum TokenClass {
     /// Symbolic
     Symbolic,
 
+    /// Full resolve symbolic
+    FullSymbolic,
+
     /// Opening parenthesis
     OpenParen,
 
@@ -89,21 +92,22 @@ impl From<TokenClass> for u8 {
         use TokenClass::*;
 
         match class {
-            Let         => 1,
-            Identifier  => 0,
-            Assignment  => 2,
-            Number      => 0,
-            Unknown     => 0,
-            Plus        => 3,
-            Minus       => 3,
-            Times       => 4,
-            Divide      => 4,
-            Symbolic    => 1,
-            OpenParen   => 2,
-            CloseParen  => 2,
-            Newline     => 0,
-            Header      => 0,
-            Comment     => 0,
+            Let             => 1,
+            Identifier      => 0,
+            Assignment      => 2,
+            Number          => 0,
+            Unknown         => 0,
+            Plus            => 3,
+            Minus           => 3,
+            Times           => 4,
+            Divide          => 4,
+            Symbolic        => 1,
+            FullSymbolic    => 1,
+            OpenParen       => 2,
+            CloseParen      => 2,
+            Newline         => 0,
+            Header          => 0,
+            Comment         => 0,
         }
     }
 }
@@ -121,7 +125,8 @@ impl From<char> for TokenClass {
             '-' => Minus,
             '*' => Times,
             '/' => Divide,
-            '!' => Symbolic,
+            '&' => Symbolic,
+            '!' => FullSymbolic,
             '(' => OpenParen,
             ')' => CloseParen,
             '0'..='9' => Number,
@@ -138,21 +143,22 @@ impl fmt::Display for TokenClass {
         use TokenClass::*;
 
         let string = match self {
-            Let         => "Let",
-            Identifier  => "Identifier",
-            Assignment  => "Assignment",
-            Number      => "Number",
-            Unknown     => "Unknown",
-            Plus        => "Plus",
-            Minus       => "Minus",
-            Times       => "Times",
-            Divide      => "Divide",
-            Symbolic    => "Symbolic",
-            Newline     => "Newline",
-            OpenParen   => "OpenParen",
-            CloseParen  => "CloseParen",
-            Comment     => "Comment",
-            Header      => "Header",
+            Let             => "Let",
+            Identifier      => "Identifier",
+            Assignment      => "Assignment",
+            Number          => "Number",
+            Unknown         => "Unknown",
+            Plus            => "Plus",
+            Minus           => "Minus",
+            Times           => "Times",
+            Divide          => "Divide",
+            Symbolic        => "Symbolic",
+            FullSymbolic    => "FullSymbolic",
+            Newline         => "Newline",
+            OpenParen       => "OpenParen",
+            CloseParen      => "CloseParen",
+            Comment         => "Comment",
+            Header          => "Header",
         };
 
         write!(f, "{}", string)

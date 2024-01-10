@@ -109,6 +109,16 @@ impl Environment {
             Symbolic (s) => match self.lookup(&s) {
                 Some (e) => Reassignment {
                     left: s.to_string(),
+                    right: Box::new(self.simplify(&e, NoResolve)),
+                },
+                None => {
+                    Error::UndeclaredVariable (&s).warn();
+                    Null
+                },
+            },
+            FullSymbolic (s) => match self.lookup(&s) {
+                Some (e) => Reassignment {
+                    left: s.to_string(),
                     right: Box::new(self.simplify(&e, SymbolsOnly)),
                 },
                 None => {

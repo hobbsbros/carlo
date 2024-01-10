@@ -50,7 +50,8 @@ pub fn repl(inputfile: Option<PathBuf>, debug: bool) {
         let output = env.evaluate(&expr);
 
         // Output
-        println!("Out[{}] >> {}", i, output);
+        let outputstr = format!("Out[{}] >> {}", i, output);
+        println!("{}", outputstr.truecolor(198, 215, 247));
 
         if output.len() == 0 {
             println!();

@@ -90,7 +90,9 @@ impl Charstream {
                 value.push(c);
             } else if c == ')' && class == CloseParen {
                 value.push(c);
-            } else if c == '!' && class == Symbolic {
+            } else if c == '&' && class == Symbolic {
+                value.push(c);
+            } else if c == '!' && class == FullSymbolic {
                 value.push(c);
             } else if c == '@' && class == Header {
                 header = true;

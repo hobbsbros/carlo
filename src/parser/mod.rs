@@ -8,6 +8,7 @@ mod number_parselet;
 mod identifier_parselet;
 mod assignment_parselet;
 mod symbolic_parselet;
+mod full_symbolic_parselet;
 mod parenthesis_parselet;
 mod header_parselet;
 
@@ -35,6 +36,7 @@ use number_parselet::NumberParselet;
 use identifier_parselet::IdentifierParselet;
 use assignment_parselet::AssignmentParselet;
 use symbolic_parselet::SymbolicParselet;
+use full_symbolic_parselet::FullSymbolicParselet;
 use parenthesis_parselet::ParenthesisParselet;
 use header_parselet::HeaderParselet;
 
@@ -61,6 +63,7 @@ impl Parser {
         prefix_parselets.insert(Minus, Box::new(NumberParselet {}));
         prefix_parselets.insert(Identifier, Box::new(IdentifierParselet {}));
         prefix_parselets.insert(Symbolic, Box::new(SymbolicParselet {}));
+        prefix_parselets.insert(FullSymbolic, Box::new(FullSymbolicParselet {}));
         prefix_parselets.insert(Let, Box::new(AssignmentParselet {}));
         prefix_parselets.insert(OpenParen, Box::new(ParenthesisParselet {}));
         prefix_parselets.insert(Header, Box::new(HeaderParselet {}));
