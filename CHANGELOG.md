@@ -1,5 +1,12 @@
 # Change Log
 
+## v0.10.0 (beta)
+
+- Implemented subheaders
+- Implemented subsubheaders
+- Implemented paragraphs
+- Added LaTeX table of contents
+
 ## v0.9.0 (released January 10, 2024)
 
 - Fixed bug in numeric rounding
