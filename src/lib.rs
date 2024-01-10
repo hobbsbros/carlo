@@ -62,7 +62,7 @@ pub const HELP: [(&str, &str); 6] = [
     ("version", include_str!("./subcommands/help_version.txt")),
 ];
 
-/// Prelude
+/// A prelude for writing subcommands.
 pub mod prelude {
     pub use std::{
         collections::HashMap,

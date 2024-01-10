@@ -36,7 +36,7 @@ pub fn latex(inputfile: Option<PathBuf>, debug: bool) {
 
     // Output title and author
     output.push_str(&format!(
-        "\\title{{{}}}\n",
+        "\\title{{\\textbf{{{}}}}}\n",
         title,
     ));
     output.push_str(&format!(

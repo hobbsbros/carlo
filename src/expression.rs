@@ -1,9 +1,6 @@
 //! Defines Carlo language expressions.
 
-use std::{
-    collections::HashMap,
-    fmt,
-};
+use std::fmt;
 
 use crate::{
     BinaryOperation,
@@ -11,8 +8,19 @@ use crate::{
 };
 
 /// LaTeX special identifiers
-const SPECIAL_IDENTIFIERS: [(&str, &str); 1] = [
-    ("pi", r#"\pi"#),
+const GREEK: [&str; 12] = [
+    "alpha",
+    "beta",
+    "gamma",
+    "delta",
+    "epsilon",
+    "varepsilon",
+    "xi",
+    "pi",
+    "theta",
+    "phi",
+    "pi",
+    "psi",
 ];
 
 #[derive(Clone, Debug)]
@@ -62,6 +70,21 @@ pub enum Expression {
 }
 
 impl Expression {
+    pub fn is_numeric(&self) -> bool {
+        match self {
+            Self::Float {
+                value: _,
+                kg: _,
+                m: _,
+                s: _,
+                a: _,
+                k: _,
+                mol: _,
+            } => true,
+            _ => false,
+        }
+    }
+
     pub fn latex(&self, toplevel: bool) -> String {
         use Expression::*;
 
@@ -233,16 +256,15 @@ impl fmt::Display for Expression {
 fn latex_identifier(id: &str) -> String {
     let mut output = String::new();
 
-    let special = HashMap::from(SPECIAL_IDENTIFIERS);
-
     for (i, part) in id.split("_").enumerate() {
-        let part = match special.get(&part) {
-            Some (p) => p,
-            None => part,
+        let lower: &str = &part.to_lowercase();
+        let part = match GREEK.contains(&lower) {
+            true => format!("\\{}", part),
+            false => part.to_string(),
         };
 
         if i == 0 {
-            output.push_str(part);
+            output.push_str(&part);
         } else {
             output.push_str(&format!(
                 "_{{{}}}",

@@ -7,6 +7,14 @@ use crate::{
     Expression,
 };
 
+#[derive(Clone, Copy)]
+/// Denote the type of symbolic resolution.
+pub enum Resolution {
+    NoResolve,
+    SymbolsOnly,
+    Numeric,
+}
+
 pub struct Environment {
     variables: HashMap<String, Expression>,
 }
@@ -30,8 +38,9 @@ impl Environment {
     }
 
     /// Simplifies an expression in this environment.
-    fn simplify(&mut self, expr: &Expression, toplevel: bool, resolve_names: bool) -> Expression {
+    fn simplify(&mut self, expr: &Expression, resolve_names: Resolution) -> Expression {
         use Expression::*;
+        use Resolution::*;
 
         match expr {
             Assignment {
@@ -39,89 +48,12 @@ impl Environment {
                 right,
             } => {
                 // Simplify the RHS
-                let sr = self.simplify(right, false, false);
-                
-                self.register(&left, &sr);
-                sr.to_owned()
-            },
-            Reassignment {
-                left,
-                right,
-            } => {
-                // Make sure this variable exists
-                match self.lookup(&left) {
-                    Some (_) => (),
-                    None => {
-                        Error::UndeclaredVariable (&left).warn();
-                        return Null;
-                    },
-                };
-
-                // Simplify the RHS
-                let sr = self.simplify(right, false, false);
-                
-                self.register(&left, &sr);
-                sr.to_owned()
-            },
-            Float {
-                value: _,
-                kg: _,
-                m: _,
-                s: _,
-                a: _,
-                k: _,
-                mol: _,
-            } => expr.to_owned(),
-            Identifier (s) => if resolve_names {
-                match self.lookup(&s) {
-                    Some (e) => self.simplify(&e, false, true),
-                    None => if toplevel {
-                        Error::UndeclaredVariable (&s).warn();
-                        Null
-                    } else {
-                        expr.to_owned()
-                    },
-                }
-            } else {
-                expr.to_owned()
-            },
-            Symbolic (s) => match self.lookup(&s) {
-                Some (e) => self.simplify(&e, false, false),
-                None => {
-                    Error::UndeclaredVariable (&s).warn();
-                    Null
-                },
-            },
-            BinOp {
-                left,
-                oper,
-                right,
-            } => {
-                let sl = self.simplify(left, false, resolve_names);
-                let sr = self.simplify(right, false, resolve_names);
-                oper.simplify(&sl, &sr)
-            },
-            Header (_) => expr.to_owned(),
-            Null => Null,
-        }
-    }
-
-    /// Simplifies an expression in this environment for a LaTeX document.
-    fn simplify_latex(&mut self, expr: &Expression, toplevel: bool, resolve_names: bool) -> Expression {
-        use Expression::*;
-
-        match expr {
-            Assignment {
-                left,
-                right,
-            } => {
-                // Simplify the RHS
-                let sr = self.simplify(right, false, false);
+                let sr = self.simplify(right, NoResolve);
                 
                 self.register(&left, &sr);
                 
                 Assignment {
-                    left: left.to_owned(),
+                    left: left.to_string(),
                     right: Box::new(sr.to_owned()),
                 }
             },
@@ -139,12 +71,12 @@ impl Environment {
                 };
 
                 // Simplify the RHS
-                let sr = self.simplify(right, false, false);
+                let sr = self.simplify(right, NoResolve);
                 
                 self.register(&left, &sr);
                 
                 Reassignment {
-                    left: left.to_owned(),
+                    left: left.to_string(),
                     right: Box::new(sr.to_owned()),
                 }
             },
@@ -157,30 +89,28 @@ impl Environment {
                 k: _,
                 mol: _,
             } => expr.to_owned(),
-            Identifier (s) => if resolve_names {
-                match self.lookup(&s) {
-                    Some (e) => if toplevel {
-                        let sr = self.simplify(&e, false, true);
-
-                        Reassignment {
-                            left: s.to_owned(),
-                            right: Box::new(sr),
-                        }
-                    } else {
-                        self.simplify(&e, false, true)
+            Identifier (s) => match resolve_names {
+                NoResolve => expr.to_owned(),
+                SymbolsOnly => match self.lookup(&s) {
+                    Some (e) => match e.is_numeric() {
+                        true => expr.to_owned(),
+                        false => self.simplify(&e, SymbolsOnly),
                     },
-                    None => if toplevel {
+                    None => expr.to_owned(),
+                },
+                Numeric => match self.lookup(&s) {
+                    Some (e) => self.simplify(&e, Numeric),
+                    None => {
                         Error::UndeclaredVariable (&s).warn();
                         Null
-                    } else {
-                        expr.to_owned()
                     },
-                }
-            } else {
-                expr.to_owned()
-            },
+                },
+            }
             Symbolic (s) => match self.lookup(&s) {
-                Some (e) => self.simplify(&e, false, false),
+                Some (e) => Reassignment {
+                    left: s.to_string(),
+                    right: Box::new(self.simplify(&e, SymbolsOnly)),
+                },
                 None => {
                     Error::UndeclaredVariable (&s).warn();
                     Null
@@ -191,8 +121,8 @@ impl Environment {
                 oper,
                 right,
             } => {
-                let sl = self.simplify(left, false, resolve_names);
-                let sr = self.simplify(right, false, resolve_names);
+                let sl = self.simplify(left, resolve_names);
+                let sr = self.simplify(right, resolve_names);
                 oper.simplify(&sl, &sr)
             },
             Header (_) => expr.to_owned(),
@@ -205,7 +135,7 @@ impl Environment {
         let mut output = String::new();
 
         for expr in expressions {
-            let out = self.simplify(expr, true, true);
+            let out = self.simplify(expr, Resolution::Numeric);
 
             if let Expression::Null = expr {
                 // Do not print Null
@@ -222,7 +152,7 @@ impl Environment {
         let mut output = String::new();
 
         for expr in expressions {
-            let out = self.simplify_latex(expr, true, true);
+            let out = self.simplify(expr, Resolution::Numeric);
 
             if let Expression::Null = expr {
                 // Do not print Null

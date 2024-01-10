@@ -1,16 +1,22 @@
 @ My Special Header
 
 # Im a comment
-let x_cm = 3 kg m s_2 + 6 kg m s_2
+let F_g = m * g
 
-let pi = 3.14
+let U = F_g * h
 
-let F = m * a
+let m = 10 kg
 
-let m = 3 kg
+let g = 9.81 m s_2
 
-let a = 9.81 m s_2
+let h = 10 m
 
-m = 4 kg
+@ Evaluation
 
-F
+!U
+
+U
+
+!F_g
+
+F_g
