@@ -74,6 +74,9 @@ pub enum Expression {
     /// Header
     Header (String),
 
+    /// Paragraph
+    Paragraph (String),
+
     /// Null
     Null,
 }
@@ -127,6 +130,7 @@ impl Expression {
             } else {
                 format!("({}{}{})", left.latex(false), oper.latex(), right.latex(false))
             },
+            Paragraph (s) => format!("\n{}\\par\n", s),
             Header (s) => format!("\n\\section{{{}}}\n", s),
             Subheader (s) => format!("\n\\subsection{{{}}}\n", s),
             Subsubheader (s) => format!("\n\\subsubsection{{{}}}\n", s),
@@ -257,6 +261,7 @@ impl fmt::Display for Expression {
                 oper,
                 right,
             } => format!("({} {} {})", left, oper, right),
+            Paragraph (s) => format!("\n{}\n", s),
             Header (s) => format!("\n{}\n===\n", s.to_uppercase()),
             Subheader (s) => format!("\n{}\n", s.to_uppercase()),
             Subsubheader (s) => format!("\n* {}\n", s),

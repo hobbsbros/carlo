@@ -51,7 +51,7 @@ pub use unit::{
     UNITS,
 };
 
-pub const VERSION: &str = "0.9.0";
+pub const VERSION: &str = "0.10.0";
 
 pub const HELP: [(&str, &str); 6] = [
     ("", include_str!("./help.txt")),

@@ -56,9 +56,10 @@ impl Charstream {
 
         let mut comment = false;
         let mut header = false;
+        let mut paragraph = false;
 
         while let Some (c) = self.peek() {
-            if TOKENBREAK.contains(&c) && !comment && !header {
+            if TOKENBREAK.contains(&c) && !comment && !header && !paragraph {
                 self.next();
                 break;
             }
@@ -66,9 +67,12 @@ impl Charstream {
             if c == '\n' {
                 comment = false;
                 header = false;
+                paragraph = false;
             }
 
-            if ('A'..='Z').contains(&c) && class == Identifier {
+            if comment | header | paragraph {
+                value.push(c);
+            } else if ('A'..='Z').contains(&c) && class == Identifier {
                 value.push(c);
             } else if ('a'..='z').contains(&c) && class == Identifier {
                 value.push(c);
@@ -97,14 +101,14 @@ impl Charstream {
             } else if c == '@' && class == Header {
                 header = true;
                 value.push(c);
+            } else if c == '~' && class == Paragraph {
+                paragraph = true;
             } else if c == '\n' && class == Newline {
                 value.push(c);
             } else if (('0'..='9').contains(&c) || c == '.' || c == 'e' || c == '+' || c == '-') && class == Number {
                 value.push(c);
             } else if c == '#' && class == Comment {
                 comment = true;
-                value.push(c);
-            } else if comment | header {
                 value.push(c);
             } else {
                 break;

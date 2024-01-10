@@ -138,6 +138,7 @@ impl Environment {
             Header (_) => expr.to_owned(),
             Subheader (_) => expr.to_owned(),
             Subsubheader (_) => expr.to_owned(),
+            Paragraph (_) => expr.to_owned(),
             Null => Null,
         }
     }
@@ -173,6 +174,7 @@ impl Environment {
                 if !latex.contains("\\section")
                     && !latex.contains("\\subsection") 
                     && !latex.contains("\\subsubsection")
+                    && !latex.contains("\\par")
                 {
                     output.push_str(&format!("$$\n{}\n$$\n", out.latex(true)));
                 } else {

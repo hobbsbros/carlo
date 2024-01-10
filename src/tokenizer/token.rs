@@ -83,6 +83,9 @@ pub enum TokenClass {
     /// Header
     Header,
 
+    /// Paragraph
+    Paragraph,
+
     /// Unknown
     Unknown,
 }
@@ -107,6 +110,7 @@ impl From<TokenClass> for u8 {
             CloseParen      => 2,
             Newline         => 0,
             Header          => 0,
+            Paragraph       => 0,
             Comment         => 0,
         }
     }
@@ -133,6 +137,7 @@ impl From<char> for TokenClass {
             '\n' => Newline,
             '#' => Comment,
             '@' => Header,
+            '~' => Paragraph,
             _ => Unknown,
         }
     }
@@ -159,6 +164,7 @@ impl fmt::Display for TokenClass {
             CloseParen      => "CloseParen",
             Comment         => "Comment",
             Header          => "Header",
+            Paragraph       => "Paragraph",
         };
 
         write!(f, "{}", string)
