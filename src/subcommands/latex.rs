@@ -44,6 +44,7 @@ pub fn latex(inputfile: Option<PathBuf>, debug: bool) {
         author,
     ));
     output.push_str("\\maketitle\n");
+    output.push_str("\\tableofcontents\n");
 
     // Parse and evaluate code
     let expressions = parse(inputfile, debug);

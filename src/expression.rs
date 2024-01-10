@@ -65,6 +65,12 @@ pub enum Expression {
         right: Box<Expression>,
     },
 
+    /// Subsubheader
+    Subsubheader (String),
+
+    /// Subheader
+    Subheader (String),
+
     /// Header
     Header (String),
 
@@ -122,6 +128,8 @@ impl Expression {
                 format!("({}{}{})", left.latex(false), oper.latex(), right.latex(false))
             },
             Header (s) => format!("\n\\section{{{}}}\n", s),
+            Subheader (s) => format!("\n\\subsection{{{}}}\n", s),
+            Subsubheader (s) => format!("\n\\subsubsection{{{}}}\n", s),
             Null => String::new(),
         };
 
@@ -249,7 +257,9 @@ impl fmt::Display for Expression {
                 oper,
                 right,
             } => format!("({} {} {})", left, oper, right),
-            Header (s) => format!("\n{}\n", s.to_uppercase()),
+            Header (s) => format!("\n{}\n===\n", s.to_uppercase()),
+            Subheader (s) => format!("\n{}\n", s.to_uppercase()),
+            Subsubheader (s) => format!("\n* {}\n", s),
             Null => "Null".to_string(),
         };
 

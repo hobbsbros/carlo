@@ -96,6 +96,7 @@ impl Charstream {
                 value.push(c);
             } else if c == '@' && class == Header {
                 header = true;
+                value.push(c);
             } else if c == '\n' && class == Newline {
                 value.push(c);
             } else if (('0'..='9').contains(&c) || c == '.' || c == 'e' || c == '+' || c == '-') && class == Number {

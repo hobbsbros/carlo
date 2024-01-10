@@ -136,6 +136,8 @@ impl Environment {
                 oper.simplify(&sl, &sr)
             },
             Header (_) => expr.to_owned(),
+            Subheader (_) => expr.to_owned(),
+            Subsubheader (_) => expr.to_owned(),
             Null => Null,
         }
     }
@@ -168,7 +170,10 @@ impl Environment {
                 // Do not print Null
             } else {
                 let latex = out.latex(true);
-                if !latex.starts_with("\n\\section") {
+                if !latex.contains("\\section")
+                    && !latex.contains("\\subsection") 
+                    && !latex.contains("\\subsubsection")
+                {
                     output.push_str(&format!("$$\n{}\n$$\n", out.latex(true)));
                 } else {
                     output.push_str(&format!("\n{}\n\n", out.latex(true)));
