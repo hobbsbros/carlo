@@ -171,7 +171,7 @@ fn format_unit(
         }
     }
 
-    format!("{}{}", value, output)   
+    format!("{:.4}{}", value, output)   
 }
 
 fn latex_unit(
@@ -216,7 +216,7 @@ fn latex_unit(
         }
     }
 
-    format!("{}{}", value, output)
+    format!("{:.4}{}", value, output)
 }
 
 impl fmt::Display for Expression {

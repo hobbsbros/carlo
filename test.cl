@@ -13,10 +13,10 @@ let h = 10 m
 
 @ Evaluation
 
-!U
+&U
 
 U
 
-!F_g
+&F_g
 
 F_g
