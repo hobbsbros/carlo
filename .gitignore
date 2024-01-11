@@ -1,1 +1,8 @@
+# Cargo build directory
 /target
+
+# Test files
+test.aux
+test.toc
+test.log
+test.pdf
