@@ -1,6 +1,6 @@
 # Change Log
 
-## v0.10.0 (beta)
+## v0.10.0 (released January 11, 2024)
 
 - Implemented subheaders
 - Implemented subsubheaders
