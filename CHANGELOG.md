@@ -1,5 +1,12 @@
 # Change Log
 
+## v0.11.0 (under development)
+
+[ ] Implement exponentiation operator
+[ ] Implement function calls
+[ ] Implement function definitions
+[ ] Implement standard library
+
 ## v0.10.0 (released January 11, 2024)
 
 - Implemented subheaders
