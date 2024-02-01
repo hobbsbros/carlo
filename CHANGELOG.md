@@ -7,7 +7,7 @@
 [ ] Implement function definitions
 [ ] Implement standard library
 
-## v0.12.0 (under development)
+## v0.12.0 (released February 1, 2024)
 
 - Change subcommand help from `carlo help subcommand` to `carlo subcommand --help`.
 
