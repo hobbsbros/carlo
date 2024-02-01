@@ -1,6 +1,0 @@
-SUBCOMMAND: version
-
-Prints the version number of the Carlo language.
-
-USAGE
-    carlo version

@@ -13,9 +13,9 @@ version number.
 
 The following instructions will guide you to adding a Carlo langauge subcommand.
 
-1. Create a Cargo library package in the `subcommands` directory with the name `sc`, where `sc` is your desired subcommand name.
+1. Create a Cargo library package in the `subcommands` directory with the name `sc`, where `sc` is your desired subcommand name.  The package should have name `carlo-sc`.
 
-2. Create a function in your subcommand library named `sc::sc`.  It is recommended that you import `carlotk::prelude::*` so you can use the Carlo tokenizer, parser, and environment utilities.  Your function must have the following signature: `fn(CliArgs) -> ()`.
+2. Create a function in your subcommand library named `sc`.  It is recommended that you import `carlotk::prelude::*` so you can use the Carlo tokenizer, parser, and environment utilities.  Your function must have the following signature: `fn(CliArgs) -> ()`.
 
 3. Create the following entry in `Cargo.toml`.
 
