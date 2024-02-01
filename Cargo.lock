@@ -10,7 +10,7 @@ checksum = "ed570934406eb16438a4e976b1b4500774099c13b8cb96eec99f620f05090ddf"
 
 [[package]]
 name = "carlo"
-version = "0.11.0"
+version = "0.12.0"
 dependencies = [
  "carlo-help",
  "carlo-latex",
@@ -31,35 +31,35 @@ dependencies = [
 
 [[package]]
 name = "carlo-latex"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "carlotk",
 ]
 
 [[package]]
 name = "carlo-repl"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "carlotk",
 ]
 
 [[package]]
 name = "carlo-run"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "carlotk",
 ]
 
 [[package]]
 name = "carlo-version"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "carlotk",
 ]
 
 [[package]]
 name = "carlotk"
-version = "0.1.0"
+version = "0.12.0"
 dependencies = [
  "colored",
  "rustyline",

@@ -9,13 +9,14 @@ const HEADER: &str = include_str!("latex_header.tex");
 const FOOTER: &str = include_str!("latex_footer.tex");
 
 /// Help menu
-const HELP: &str = include_str!("help_latex.txt");
+const HELP: &str = include_str!("../help_latex.txt");
 
-pub fn latex(args: CliArgs) {
-    if args.contains(Flag::Help) {
-        println!("{}", HELP);
-    }
-    
+/// Provide help to the user
+pub fn helpme() {
+    printhelp(HELP);
+}
+
+pub fn latex(args: CliArgs) {   
     let inputfile = args.inputfile.clone();
     let debug = args.contains(Flag::Debug);
 

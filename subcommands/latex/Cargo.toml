@@ -2,7 +2,7 @@
 name = "carlo-latex"
 description = "A LaTeX emitter for the simple interpreted programming language Carlo."
 license = "MIT"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 
 [lib]
@@ -10,4 +10,4 @@ path = "src/lib.rs"
 
 [dependencies.carlotk]
 path = "../../carlotk"
-version = "0.1.0"
+version = "0.12.0"

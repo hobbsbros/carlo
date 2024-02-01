@@ -9,7 +9,9 @@ version number.
 
 2. Open `carlotk/Cargo.toml`.  Change the version number under the `[package]` key.
 
-3. Open `Cargo.toml` and change the version `[dependencies.carlotk]` to the new version number.
+3. Open `Cargo.toml` and change *both* the package version (under `[package]`) and the `carlotk` dependency version (under `[dependencies.carlotk]`) to the new version number.
+
+As a general rule, to minimize confusion and maximally facilitate dependency resolution, *the Carlo binary and the CarloTK library must be at the same version*.
 
 ## Adding a Subcommand
 

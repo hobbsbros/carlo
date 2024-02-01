@@ -2,7 +2,19 @@
 
 use carlotk::prelude::*;
 
+/// Help menu
+const HELP: &str = include_str!("../help_repl.txt");
+
+/// Provide help to the user
+pub fn helpme() {
+    printhelp(HELP);
+}
+
 pub fn repl(args: CliArgs) {
+    if args.contains(Flag::Help) {
+        printhelp(HELP);
+    }
+
     let inputfile = args.inputfile.clone();
     let debug = args.contains(Flag::Debug);
 

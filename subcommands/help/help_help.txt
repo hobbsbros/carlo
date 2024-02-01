@@ -7,4 +7,4 @@ USAGE
     carlo help [flags]
 
 FLAGS
-    -h, --help          display subcommand help
+    -h, --help      display subcommand help
