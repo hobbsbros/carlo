@@ -5,9 +5,11 @@
 The following instructions will guide you to incrementing the Carlo language
 version number.
 
-1. Open `src/main.rs`.  Change the `VERSION` string to the new version number.
+1. Open `carlotk/src/lib.rs`.  Change the `VERSION` string to the new version number.
 
-2. Open `Cargo.toml`.  Change the version number towards the top of the file.
+2. Open `carlotk/Cargo.toml`.  Change the version number under the `[package]` key.
+
+3. Open `Cargo.toml` and change the version `[dependencies.carlotk]` to the new version number.
 
 ## Adding a Subcommand
 
