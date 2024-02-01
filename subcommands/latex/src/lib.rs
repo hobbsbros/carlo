@@ -8,7 +8,14 @@ const HEADER: &str = include_str!("latex_header.tex");
 /// LaTeX footer
 const FOOTER: &str = include_str!("latex_footer.tex");
 
+/// Help menu
+const HELP: &str = include_str!("help_latex.txt");
+
 pub fn latex(args: CliArgs) {
+    if args.contains(Flag::Help) {
+        println!("{}", HELP);
+    }
+    
     let inputfile = args.inputfile.clone();
     let debug = args.contains(Flag::Debug);
 

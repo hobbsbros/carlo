@@ -3,7 +3,7 @@ USAGE
     carlo [subcommand]
     carlo [subcommand] [input file]
     carlo [subcommand] [input file] [flags]
-    carlo [subcommand] help
+    carlo [subcommand] --help
 
 SUBCOMMANDS
     help        display this help menu
@@ -14,4 +14,4 @@ SUBCOMMANDS
 
 HELP
     Execute `carlo help` to see this menu.
-    Execute `carlo [subcommand] help` to get help on a specific subcommand.
+    Execute `carlo [subcommand] --help` to get help on a specific subcommand.

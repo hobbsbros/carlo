@@ -4,3 +4,6 @@ Prints the version number of the Carlo language.
 
 USAGE
     carlo version
+
+FLAGS
+    -h, --help      display subcommand help

@@ -10,3 +10,4 @@ USAGE
 
 FLAGS
     -d, --debug     run in debug mode
+    -h, --help      display subcommand help

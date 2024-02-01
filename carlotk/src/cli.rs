@@ -13,8 +13,8 @@ pub enum Flag {
     /// Runs the Carlo language parser in debug mode
     Debug,
 
-    /// Runs the Carlo language help menu in interactive mode
-    Interactive,
+    /// Provides help to the user
+    Help,
 }
 
 /// Converts a string into a flag.
@@ -24,7 +24,7 @@ impl From<&str> for Flag {
 
         match input {
             "debug" => Debug,
-            "interactive" => Interactive,
+            "help" => Help,
             _ => Error::UnrecognizedFlag (input).throw(),
         }
     }
@@ -37,7 +37,7 @@ impl From<char> for Flag {
 
         match input {
             'd' => Debug,
-            'i' => Interactive,
+            'h' => Help,
             _ => Error::UnrecognizedFlag (input).throw(),
         }
     }

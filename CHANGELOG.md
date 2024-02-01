@@ -1,11 +1,15 @@
 # Change Log
 
-## v0.12.0 (under development)
+## v0.13.0 (under development)
 
 [ ] Implement exponentiation operator
 [ ] Implement function calls
 [ ] Implement function definitions
 [ ] Implement standard library
+
+## v0.12.0 (under development)
+
+- Change subcommand help from `carlo help subcommand` to `carlo subcommand --help`.
 
 ## v0.11.0 (released February 1, 2024)
 
