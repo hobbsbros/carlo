@@ -1,5 +1,5 @@
 [package]
-name = "help"
+name = "carlo-help"
 description = "A help utility for the simple interpreted programming language Carlo."
 license = "MIT"
 version = "0.1.0"

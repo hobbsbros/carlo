@@ -1,5 +1,5 @@
 [package]
-name = "run"
+name = "carlo-run"
 description = "A runner for the simple interpreted programming language Carlo."
 license = "MIT"
 version = "0.1.0"

@@ -1,5 +1,5 @@
 [package]
-name = "latex"
+name = "carlo-latex"
 description = "A LaTeX emitter for the simple interpreted programming language Carlo."
 license = "MIT"
 version = "0.1.0"

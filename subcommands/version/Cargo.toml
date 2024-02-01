@@ -1,5 +1,5 @@
 [package]
-name = "version"
+name = "carlo-version"
 description = "Version for the simple interpreted programming language Carlo."
 license = "MIT"
 version = "0.1.0"

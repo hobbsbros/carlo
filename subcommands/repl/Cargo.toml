@@ -1,5 +1,5 @@
 [package]
-name = "repl"
+name = "carlo-repl"
 description = "A REPL for the simple interpreted programming language Carlo."
 license = "MIT"
 version = "0.1.0"
