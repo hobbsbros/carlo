@@ -4,11 +4,11 @@ use carlotk::prelude::*;
 
 pub const HELP: [(&str, &str); 6] = [
     ("", include_str!("../help.txt")),
-    ("repl", include_str!("../../repl/help_repl.txt")),
-    ("run", include_str!("../../run/help_run.txt")),
-    ("latex", include_str!("../../latex/help_latex.txt")),
+    ("repl", include_str!("../help_repl.txt")),
+    ("run", include_str!("../help_run.txt")),
+    ("latex", include_str!("../help_latex.txt")),
     ("help", include_str!("../help_help.txt")),
-    ("version", include_str!("../../version/help_version.txt")),
+    ("version", include_str!("../help_version.txt")),
 ];
 
 pub fn help(args: CliArgs) {

@@ -1,0 +1,12 @@
+SUBCOMMAND: repl
+
+Opens a Carlo language REPL (Read, Evaluate, Print, Loop).
+
+USAGE
+    carlo repl
+    carlo repl [input file]
+    carlo repl [input file] [flags]
+    carlo repl [flags]
+
+FLAGS
+    -d, --debug     run in debug mode
