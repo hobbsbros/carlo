@@ -7,7 +7,7 @@
 [ ] Implement function definitions
 [ ] Implement standard library
 
-## v0.11.0 (under development)
+## v0.11.0 (released February 1, 2024)
 
 - Modularize subcommands
 
