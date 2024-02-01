@@ -5,6 +5,7 @@ mod cli;
 mod environment;
 mod error;
 mod expression;
+mod help;
 mod parser;
 mod tokenizer;
 mod unit;
@@ -72,6 +73,8 @@ pub mod prelude {
         Parser,
         VERSION,
     };
+
+    pub use crate::help::printhelp;
 }
 
 /// Converts a source file into a list of expressions.
@@ -136,6 +139,17 @@ macro_rules! include_subcommands {
         using $args: ident
         $(subcommand $subcommand: ident)*
     ) => {
+        use carlotk::Flag;
+
+        // If help requested, print help
+        if $args.contains(Flag::Help) {
+            match $args.subcommand.as_str() {
+                $( stringify!($subcommand) => $subcommand::helpme(), )*
+                _ => help::helphelp(),
+            }
+        }
+        
+        // If no help requested, execute subcommand
         match $args.subcommand.as_str() {
             $( stringify!($subcommand) => $subcommand::$subcommand($args), )*
             _ => repl::repl($args),
