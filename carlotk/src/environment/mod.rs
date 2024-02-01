@@ -5,9 +5,10 @@ use std::collections::HashMap;
 use crate::{
     Error,
     Expression,
+    carlo_std,
 };
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, PartialEq, Eq)]
 /// Denote the type of symbolic resolution.
 pub enum Resolution {
     NoResolve,
@@ -105,7 +106,7 @@ impl Environment {
                         Null
                     },
                 },
-            }
+            },
             Symbolic (s) => match self.lookup(&s) {
                 Some (e) => Reassignment {
                     left: s.to_string(),
@@ -135,6 +136,26 @@ impl Environment {
                 let sr = self.simplify(right, resolve_names);
                 oper.simplify(&sl, &sr)
             },
+            FnCall {
+                name,
+                arguments,
+            } => match resolve_names {
+                Numeric => carlo_std::call(
+                    name,
+                    &arguments
+                        .iter()
+                        .map(|a| self.simplify(a, Numeric))
+                        .collect::<Vec<Expression>>()
+                ),
+                SymbolsOnly => FnCall {
+                    name: name.to_owned(),
+                    arguments: arguments
+                        .iter()
+                        .map(|a| self.simplify(a, SymbolsOnly))
+                        .collect::<Vec<Expression>>()
+                },
+                NoResolve => expr.to_owned(),
+            }
             Header (_) => expr.to_owned(),
             Subheader (_) => expr.to_owned(),
             Subsubheader (_) => expr.to_owned(),

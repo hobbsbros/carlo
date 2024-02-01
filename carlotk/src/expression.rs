@@ -4,11 +4,12 @@ use std::fmt;
 
 use crate::{
     BinaryOperation,
+    carlo_std,
     UNITS,
 };
 
 /// LaTeX special identifiers
-const GREEK: [&str; 12] = [
+const GREEK: [&str; 13] = [
     "alpha",
     "beta",
     "gamma",
@@ -21,6 +22,7 @@ const GREEK: [&str; 12] = [
     "phi",
     "pi",
     "psi",
+    "omega",    
 ];
 
 #[derive(Clone, Debug)]
@@ -63,6 +65,12 @@ pub enum Expression {
         left: Box<Expression>,
         oper: BinaryOperation,
         right: Box<Expression>,
+    },
+
+    /// Function call
+    FnCall {
+        name: String,
+        arguments: Vec<Expression>,
     },
 
     /// Subsubheader
@@ -130,6 +138,10 @@ impl Expression {
             } else {
                 format!("({}{}{})", left.latex(false), oper.latex(), right.latex(false))
             },
+            FnCall {
+                name,
+                arguments,
+            } => carlo_std::latex(name, arguments),
             Paragraph (s) => format!("\n{}\\par\n", s),
             Header (s) => format!("\n\\section{{{}}}\n", s),
             Subheader (s) => format!("\n\\subsection{{{}}}\n", s),
@@ -261,6 +273,10 @@ impl fmt::Display for Expression {
                 oper,
                 right,
             } => format!("({} {} {})", left, oper, right),
+            FnCall {
+               name,
+               arguments, 
+            } => carlo_std::format(name, arguments),
             Paragraph (s) => format!("\n{}\n", s),
             Header (s) => format!("\n{}\n===\n", s.to_uppercase()),
             Subheader (s) => format!("\n{}\n", s.to_uppercase()),

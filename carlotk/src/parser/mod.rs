@@ -16,6 +16,7 @@ mod paragraph_parselet;
 // Infix parselets
 mod reassignment_parselet;
 mod binary_operation_parselet;
+mod function_call_parselet;
 
 use std::collections::HashMap;
 
@@ -44,6 +45,7 @@ use paragraph_parselet::ParagraphParselet;
 
 use reassignment_parselet::ReassignmentParselet;
 use binary_operation_parselet::BinaryOperationParselet;
+use function_call_parselet::FunctionCallParselet;
 
 /// Abstracts over the Carlo parser.
 pub struct Parser {
@@ -77,6 +79,7 @@ impl Parser {
         infix_parselets.insert(Minus, Box::new(BinaryOperationParselet {}));
         infix_parselets.insert(Times, Box::new(BinaryOperationParselet {}));
         infix_parselets.insert(Divide, Box::new(BinaryOperationParselet {}));
+        infix_parselets.insert(OpenParen, Box::new(FunctionCallParselet {}));
 
         Self {
             prefix_parselets,

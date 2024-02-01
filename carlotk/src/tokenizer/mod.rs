@@ -98,6 +98,8 @@ impl Charstream {
                 value.push(c);
             } else if c == '!' && class == FullSymbolic {
                 value.push(c);
+            } else if c == ',' && class == Comma {
+                value.push(c);
             } else if c == '@' && class == Header {
                 header = true;
                 value.push(c);

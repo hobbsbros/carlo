@@ -1,6 +1,7 @@
 //! Main library for the Carlo language.
 
 mod binary_operation;
+mod carlo_std;
 mod cli;
 mod environment;
 mod error;
@@ -154,5 +155,43 @@ macro_rules! include_subcommands {
             $( stringify!($subcommand) => $subcommand::$subcommand($args), )*
             _ => repl::repl($args),
         };
+    };
+}
+
+#[macro_export]
+/// Constructs the standard library.
+macro_rules! construct_std {
+    (
+        $(func $f: ident)*
+    ) => {
+        // Import Expression enum
+        use crate::Expression;
+
+        // Add each function as a module
+        $( mod $f; )*
+
+        /// Calls the requested standard library function.
+        pub fn call(name: &str, arguments: &Vec<Expression>) -> Expression {
+            match name {
+                $( stringify!($f) => $f::eval(arguments), )*
+                _ => Expression::Null,
+            }
+        }
+
+        /// Converts the requested standard library function to text.
+        pub fn format(name: &str, arguments: &Vec<Expression>) -> String {
+            match name {
+                $( stringify!($f) => $f::format(arguments), )*
+                _ => String::new(),
+            }
+        }
+
+        /// Converts the requested standard library function to LaTeX.
+        pub fn latex(name: &str, arguments: &Vec<Expression>) -> String {
+            match name {
+                $( stringify!($f) => $f::latex(arguments), )*
+                _ => String::new(),
+            }
+        }
     };
 }

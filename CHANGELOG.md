@@ -1,11 +1,18 @@
 # Change Log
 
-## v0.13.0 (under development)
+## v1.2.0 (under development)
 
 [ ] Implement exponentiation operator
-[ ] Implement function calls
 [ ] Implement function definitions
-[ ] Implement standard library
+
+## v1.1.0 (under development)
+
+- Implement standard library
+- Implement function calls
+
+## v1.0.0 (released February 1, 2024)
+
+- Minor patches from v0.12.0.
 
 ## v0.12.0 (released February 1, 2024)
 
@@ -17,28 +24,28 @@
 
 ## v0.10.0 (released January 11, 2024)
 
-- Implemented subheaders
-- Implemented subsubheaders
-- Implemented paragraphs
-- Added LaTeX table of contents
+- Implement subheaders
+- Implement subsubheaders
+- Implement paragraphs
+- Add LaTeX table of contents
 
 ## v0.9.0 (released January 10, 2024)
 
-- Fixed bug in numeric rounding
-- Added support for full & partial symbolic evaluation
+- Fix bug in numeric rounding
+- Add support for full & partial symbolic evaluation
 
 ## v0.8.0 (released January 6, 2024)
 
-- Added LaTeX headers
-- Added LaTeX special identifiers support
-- Added LaTeX subscript support
-- Improved LaTeX generation
+- Add LaTeX headers
+- Add LaTeX special identifiers support
+- Add LaTeX subscript support
+- Improve LaTeX generation
 
 ## v0.7.0 (released January 5, 2024)
 
-- Added comments
+- Add comment support
 
 ## v0.6.0 (released January 5, 2024)
 
-- Added REPL history
-- Implemented symbolic evaluation
+- Add REPL history
+- Implement symbolic evaluation
