@@ -6,6 +6,7 @@
 [ ] Implement function calls
 [ ] Implement function definitions
 [ ] Implement standard library
+[ ] Modularize subcommands
 
 ## v0.10.0 (released January 11, 2024)
 
