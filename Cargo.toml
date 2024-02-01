@@ -27,7 +27,7 @@ rustyline = "13.0.0"
 [dependencies.carlotk]
 path = "./carlotk"
 package = "carlotk"
-version = "1.0.1"
+version = "1.1.0"
 
 [dependencies.help]
 path = "./subcommands/help"
