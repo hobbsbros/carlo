@@ -3,7 +3,7 @@ name = "carlotk"
 description = "The main library for Carlo, a simple interpreted programming language."
 license = "MIT"
 repository = "https://github.com/hobbsbros/carlo.git"
-version = "0.12.1"
+version = "1.0.0"
 edition = "2021"
 
 [lib]
