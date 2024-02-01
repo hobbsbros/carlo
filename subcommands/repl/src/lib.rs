@@ -1,8 +1,11 @@
 //! Defines the REPL subcommand.
 
-use crate::prelude::*;
+use carlotk::prelude::*;
 
-pub fn repl(inputfile: Option<PathBuf>, debug: bool) {
+pub fn repl(args: CliArgs) {
+    let inputfile = args.inputfile.clone();
+    let debug = args.contains(Flag::Debug);
+
     let mut i = 0;
 
     println!("{}", "The Carlo Language".truecolor(20, 146, 255).bold());

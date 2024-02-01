@@ -1,8 +1,20 @@
 //! Defines the HELP subcommand.
 
-use crate::prelude::*;
+use carlotk::prelude::*;
 
-pub fn help(argument: &str, interactive: bool) {
+pub const HELP: [(&str, &str); 6] = [
+    ("", include_str!("../help.txt")),
+    ("repl", include_str!("../../repl/help_repl.txt")),
+    ("run", include_str!("../../run/help_run.txt")),
+    ("latex", include_str!("../../latex/help_latex.txt")),
+    ("help", include_str!("../help_help.txt")),
+    ("version", include_str!("../../version/help_version.txt")),
+];
+
+pub fn help(args: CliArgs) {
+    let interactive = args.contains(Flag::Interactive);
+    let argument: &str = &args.argument.unwrap_or(String::new());
+
     let hashmap = HashMap::from(HELP);
 
     if interactive {

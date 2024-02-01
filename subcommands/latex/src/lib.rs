@@ -1,14 +1,17 @@
 //! Defines the LATEX subcommand.
 
-use crate::prelude::*;
+use carlotk::prelude::*;
 
 /// LaTeX header
-const HEADER: &str = include_str!("../latex_header.tex");
+const HEADER: &str = include_str!("latex_header.tex");
 
 /// LaTeX footer
-const FOOTER: &str = include_str!("../latex_footer.tex");
+const FOOTER: &str = include_str!("latex_footer.tex");
 
-pub fn latex(inputfile: Option<PathBuf>, debug: bool) {
+pub fn latex(args: CliArgs) {
+    let inputfile = args.inputfile.clone();
+    let debug = args.contains(Flag::Debug);
+
     // Create input method
     let mut rl = DefaultEditor::new().unwrap();
 

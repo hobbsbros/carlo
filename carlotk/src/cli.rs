@@ -5,10 +5,7 @@ use std::{
     path::PathBuf,
 };
 
-use crate::{
-    Error,
-    Subcommand,
-};
+use crate::Error;
 
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 /// Flags for the Carlo language executable.
@@ -49,7 +46,7 @@ impl From<char> for Flag {
 /// Command-line arguments for the Carlo language executable.
 pub struct CliArgs {
     /// Executable subcommand
-    pub subcommand: Subcommand,
+    pub subcommand: String,
 
     /// Argument to subcommand
     pub argument: Option<String>,
@@ -71,15 +68,15 @@ impl CliArgs {
 
         // Parse subcommand
         let subcommand = if args.len() > 1 {
-            args[1].as_str().into()
+            args[1].to_owned()
         } else {
-            Subcommand::Repl
+            "repl".to_string()
         };
 
         // Parse argument or input file
-        if subcommand == Subcommand::Help && args.len() > 2 && !args[2].starts_with("-") {
+        if subcommand == "help" && args.len() > 2 && !args[2].starts_with("-") {
             argument = Some (args[2].to_owned());
-        } else if subcommand != Subcommand::Help && args.len() > 2 && !args[2].starts_with("-") {
+        } else if subcommand != "help" && args.len() > 2 && !args[2].starts_with("-") {
             inputfile = Some (args[2].as_str().into());
         }
 

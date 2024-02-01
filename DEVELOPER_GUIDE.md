@@ -13,19 +13,15 @@ version number.
 
 The following instructions will guide you to adding a Carlo langauge subcommand.
 
-1. Create `src/subcommands/your-new-subcommand.rs`.  Write a new function corresponding
-to your subcommand
+1. Create a Cargo library package in the `subcommands` directory with the name `sc`, where `sc` is your desired subcommand name.
 
-2. Open `src/main.rs`.  Add `Subcommand::YourNewSubcommand` to the `main` function match
-statement.
+2. Create a function in your subcommand library named `sc::sc`.  It is recommended that you import `carlotk::prelude::*` so you can use the Carlo tokenizer, parser, and environment utilities.  Your function must have the following signature: `fn(CliArgs) -> ()`.
 
-3. Open `src/lib.rs`.  Add `./subcommands/help_your-new-subcommand.txt` to the `HELP`
-hashmap.
+3. Create the following entry in `Cargo.toml`.
 
-4. Open `src/subcommands/mod.rs`.  Add `YourNewSubcommand` to the `Subcommand` enumeration.
-Add `"your-new-subcommand" => YourNewSubcommand` in the `From<&str>` trait implementation
-block.
+```
+[dependencies.sc]
+path = "./subcommands/sc"
+```
 
-5. Open `src/help.txt`.  Add `your-new-subcommand` to the help menu.
-
-6. Create a file called `src/subcommands/help_your-new-subcommand.txt`.  Add a help menu.
+4. In `src/main.rs`, add `subcommand sc` (on a new line) to the `include_subcommands!` macro invocation.

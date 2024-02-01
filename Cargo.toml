@@ -1,16 +1,20 @@
+[workspace]
+resolver = "2"
+members = [
+    "carlotk",
+    "subcommands/repl",
+    "subcommands/latex",
+    "subcommands/version",
+    "subcommands/help",
+]
+
 [package]
 name = "carlo"
 description = "A simple interpreted programming language."
 license = "MIT"
 repository = "https://github.com/hobbsbros/carlo.git"
-version = "0.10.0"
+version = "0.11.0"
 edition = "2021"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
-[lib]
-name = "carlotk"
-path = "src/lib.rs"
 
 [[bin]]
 name = "carlo"
@@ -19,3 +23,21 @@ path = "src/main.rs"
 [dependencies]
 colored = "2.1.0"
 rustyline = "13.0.0"
+
+[dependencies.carlotk]
+path = "./carlotk"
+
+[dependencies.help]
+path = "./subcommands/help"
+
+[dependencies.latex]
+path = "./subcommands/latex"
+
+[dependencies.run]
+path = "./subcommands/run"
+
+[dependencies.repl]
+path = "./subcommands/repl"
+
+[dependencies.version]
+path = "./subcommands/version"

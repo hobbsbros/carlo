@@ -1,0 +1,15 @@
+[package]
+name = "carlotk"
+description = "The main library for Carlo, a simple interpreted programming language."
+license = "MIT"
+repository = "https://github.com/hobbsbros/carlo.git"
+version = "0.11.0"
+edition = "2021"
+
+[lib]
+name = "carlotk"
+path = "src/lib.rs"
+
+[dependencies]
+colored = "2.1.0"
+rustyline = "13.0.0"

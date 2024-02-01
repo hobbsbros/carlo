@@ -6,7 +6,6 @@ mod environment;
 mod error;
 mod expression;
 mod parser;
-pub mod subcommands;
 mod tokenizer;
 mod unit;
 
@@ -44,23 +43,12 @@ pub use tokenizer::{
 
 pub use parser::Parser;
 
-pub use subcommands::Subcommand;
-
 pub use unit::{
     PREFIXES,
     UNITS,
 };
 
-pub const VERSION: &str = "0.10.0";
-
-pub const HELP: [(&str, &str); 6] = [
-    ("", include_str!("./help.txt")),
-    ("repl", include_str!("./subcommands/help_repl.txt")),
-    ("run", include_str!("./subcommands/help_run.txt")),
-    ("latex", include_str!("./subcommands/help_latex.txt")),
-    ("help", include_str!("./subcommands/help_help.txt")),
-    ("version", include_str!("./subcommands/help_version.txt")),
-];
+pub const VERSION: &str = "0.11.0";
 
 /// A prelude for writing subcommands.
 pub mod prelude {
@@ -75,9 +63,10 @@ pub mod prelude {
     pub use rustyline::DefaultEditor;
 
     pub use crate::{
+        CliArgs,
         Environment,
         Error,
-        HELP,
+        Flag,
         read,
         parse,
         Parser,
@@ -138,4 +127,18 @@ pub fn read(prompt: &str) -> String {
     };
 
     buffer.trim().to_owned()
+}
+
+#[macro_export]
+/// Includes subcommands in the Carlo binary.
+macro_rules! include_subcommands {
+    (
+        using $args: ident
+        $(subcommand $subcommand: ident)*
+    ) => {
+        match $args.subcommand.as_str() {
+            $( stringify!($subcommand) => $subcommand::$subcommand($args), )*
+            _ => repl::repl($args),
+        };
+    };
 }
