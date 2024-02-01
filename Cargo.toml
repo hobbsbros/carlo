@@ -13,7 +13,7 @@ name = "carlo"
 description = "A simple interpreted programming language."
 license = "MIT"
 repository = "https://github.com/hobbsbros/carlo.git"
-version = "0.12.0"
+version = "0.12.1"
 edition = "2021"
 
 [[bin]]
@@ -27,7 +27,7 @@ rustyline = "13.0.0"
 [dependencies.carlotk]
 path = "./carlotk"
 package = "carlotk"
-version = "0.12.0"
+version = "0.12.1"
 
 [dependencies.help]
 path = "./subcommands/help"

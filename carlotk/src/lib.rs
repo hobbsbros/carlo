@@ -49,7 +49,7 @@ pub use unit::{
     UNITS,
 };
 
-pub const VERSION: &str = "0.11.0";
+pub const VERSION: &str = "0.12.1";
 
 /// A prelude for writing subcommands.
 pub mod prelude {
