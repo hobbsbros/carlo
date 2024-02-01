@@ -2,7 +2,8 @@
 /target
 
 # Test files
-test.aux
-test.toc
-test.log
-test.pdf
+*.tex
+*.aux
+*.toc
+*.log
+*.pdf
