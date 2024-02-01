@@ -1,12 +1,15 @@
 # Change Log
 
-## v0.11.0 (under development)
+## v0.12.0 (under development)
 
 [ ] Implement exponentiation operator
 [ ] Implement function calls
 [ ] Implement function definitions
 [ ] Implement standard library
-[ ] Modularize subcommands
+
+## v0.11.0 (under development)
+
+- Modularize subcommands
 
 ## v0.10.0 (released January 11, 2024)
 
